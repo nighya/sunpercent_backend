@@ -35,7 +35,7 @@ router.route("/UserUserView/:contentId/Edit").post(testCtrl.updateUser);
 //api/test/login
 router.route("/login").post(userCtrl.login);
 
-//api/test/registerUser
+// /registerUser
 router.route("/register").post(userCtrl.register);
 
 //api/test/Mypage

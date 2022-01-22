@@ -13,7 +13,7 @@ const userCtrl = {
 
     connection.query(sql, loginbody_param[0], (err, row) => {
       if (err)
-        return res.status(400).json({
+        return res.status(400).json({      
           error: [
             {
               msg: "id not found!",
@@ -83,14 +83,16 @@ const userCtrl = {
     const short_uid = arr_uid[4];
     const body_param = [
       short_uid,
-      req.body.id,
-      req.body.password,
+      req.body.email,
       req.body.nickname,
+      req.body.password,
+      req.body.gender,
+      
     ];
-    const sql = `INSERT INTO member(uid,id,password,nickname) VALUES (?,?,?,?)`;
+    const sql = `INSERT INTO members(user_uid,email,nickname,password,gender) VALUES (?,?,?,?,?)`;
     bcrypt.genSalt(saltRounds, function (err, salt) {
-      bcrypt.hash(body_param[2], salt, function (err, hash) {
-        body_param[2] = hash;
+      bcrypt.hash(body_param[3], salt, function (err, hash) {
+        body_param[3] = hash;
         connection.query(sql, body_param, (err, row) => {
           if (row) {
             res.status(200).json({
