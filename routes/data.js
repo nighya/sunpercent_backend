@@ -32,7 +32,7 @@ router
   .post(testCtrl.updateUser);
 router.route("/UserUserView/:contentId/Edit").post(testCtrl.updateUser);
 
-//api/test/login
+// /login
 router.route("/login").post(userCtrl.login);
 
 // /registerUser

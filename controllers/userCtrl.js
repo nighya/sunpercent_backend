@@ -8,8 +8,8 @@ require("dotenv").config();
 
 const userCtrl = {
   login: async (req, res) => {
-    const loginbody_param = [req.body.id, req.body.password];
-    const sql = "SELECT * FROM member WHERE id=?";
+    const loginbody_param = [req.body.email, req.body.password];
+    const sql = "SELECT * FROM members WHERE email=?";
 
     connection.query(sql, loginbody_param[0], (err, row) => {
       if (err)
@@ -24,7 +24,7 @@ const userCtrl = {
         bcrypt.compare(loginbody_param[1], row[0].password, (error, result) => {
           let accessToken = jwt.sign(
             {
-              id: loginbody_param[0],
+              email: loginbody_param[0],
             },
             process.env.JWT_SECRET,
             {
@@ -33,7 +33,7 @@ const userCtrl = {
           );
           let refreshToken = jwt.sign(
             {
-              id: loginbody_param[0],
+              email: loginbody_param[0],
             },
             process.env.JWT_SECRET,
             {
@@ -48,10 +48,10 @@ const userCtrl = {
               httpOnly: true,
             });
             res.status(200).json({
-              uid: row[0].uid,
-              id: row[0].id,
+              user_uid: row[0].user_uid,
+              email: row[0].email,
               nickname: row[0].nickname,
-              message: "토큰 발급됨",
+              gender: row[0].gender,
               // accessToken,
               // refreshToken,
             });
