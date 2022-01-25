@@ -59,9 +59,9 @@ router.post("/imageupload", upload.single("image"), imageCtrl.imageupload);
 //image load
 router.route("/getimage/:content_uid").get(imageCtrl.getimage);
 
-router.route("/getAllimages").get(imageCtrl.getAllimages)
+router.route("/getAllimages").get(imageCtrl.getAllimages);
 
 //image delete
-router.route("/getimage/:content_uid").post(imageCtrl.deleteImage)
+router.route("/getimage/:content_uid").post(imageCtrl.deleteImage);
 
 module.exports = router;
