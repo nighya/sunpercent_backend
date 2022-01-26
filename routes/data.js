@@ -54,7 +54,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post("/imageupload", upload.single("image"), imageCtrl.imageupload);
+router.route("/imageupload").post(middleware.tokenCheck, upload.single("image") ,imageCtrl.imageupload);
 
 //image load
 router.route("/getimage/:content_uid").get(imageCtrl.getimage);
