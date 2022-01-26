@@ -3,6 +3,7 @@ const path = require("path");
 const connection = require("../dbconfig");
 const uuid = require("uuid-sequential");
 const fs = require("fs");
+const moment = require("moment")
 
 const imageCtrl = {
   imageupload: (req, res, next) => {
@@ -12,10 +13,11 @@ const imageCtrl = {
     // const content_uid = req.body.content_uid;
     const user_uid = req.body.user_uid;
     const image_path = `/images/${req.file.filename}`; // image 경로 만들기
-    const datas = [content_uid, user_uid, image_path];
+    const date = moment().format("YYYY-MM-DD hh:mm:ss A")
+    const datas = [content_uid, user_uid, image_path,date];
 
     const sql =
-      "INSERT INTO images(content_uid, user_uid, image_path) values(?, ?, ?)";
+      "INSERT INTO images(content_uid, user_uid, image_path,date) values(?, ?, ?,?)";
     connection.query(sql, datas, (err, rows) => {
       console.log(datas);
       if (err) {
