@@ -31,8 +31,7 @@ const imageCtrl = {
   },
   getimage: (req, res, next) => {
     const content_uid = req.params.content_uid;
-    const sql =
-      "SELECT * FROM images WHERE content_uid=?";
+    const sql = "SELECT * FROM images WHERE content_uid=?";
     connection.query(sql, [content_uid], (err, row) => {
       if (err) {
         console.log(err);
@@ -51,7 +50,7 @@ const imageCtrl = {
         console.log(err);
         res.send(err);
       } else {
-        console.log(row)
+        console.log(row);
         res.send(row);
       }
     });
@@ -76,6 +75,28 @@ const imageCtrl = {
     } catch (err) {
       console.log(err);
     }
+  },
+
+  scoreupload: (req, res, next) => {
+    const content_uid = req.body.content_uid;
+    const to_uid = req.body.to_uid;
+    const from_uid = req.body.from_uid;
+    const content_score = req.body.content_score;
+    const date = moment().format("YYYY-MM-DD hh:mm:ss A");
+    const datas = [content_uid, to_uid, from_uid, content_score, date];
+
+    const sql =
+      "INSERT INTO score(content_uid, to_uid, from_uid,content_score,date) values(?,?,?,?,?)";
+    connection.query(sql, datas, (err, rows) => {
+      console.log(datas);
+      if (err) {
+        console.error("err : " + err);
+        res.send(err);
+      } else {
+        console.log("rows: " + JSON.stringify(rows));
+        res.send(rows);
+      }
+    });
   },
 };
 

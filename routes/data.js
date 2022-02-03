@@ -64,4 +64,7 @@ router.route("/getAllimages").get(imageCtrl.getAllimages);
 //image delete
 router.route("/getimage/:content_uid").post(imageCtrl.deleteImage);
 
+//image contentscore
+router.route("/contentscore").post(imageCtrl.scoreupload)
+
 module.exports = router;
