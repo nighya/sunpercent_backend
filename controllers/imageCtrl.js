@@ -39,7 +39,6 @@ const imageCtrl = {
         console.log(err);
         res.send(err);
       } else {
-        console.log(row);
         res.send(row);
       }
     });
@@ -90,7 +89,6 @@ const imageCtrl = {
     const sql =
       "INSERT INTO score(content_uid, to_uid, from_uid,content_score,date,gender) values(?,?,?,?,?,?)";
     connection.query(sql, datas, (err, rows) => {
-      console.log(datas);
       if (err) {
         console.error("err : " + err);
         res.send(err);
