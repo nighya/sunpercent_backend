@@ -14,10 +14,12 @@ const imageCtrl = {
     const user_uid = req.body.user_uid;
     const image_path = `/images/${req.file.filename}`; // image 경로 만들기
     const date = moment().format("YYYY-MM-DD hh:mm:ss A");
-    const datas = [content_uid, user_uid, image_path, date];
+    const nickname = req.body.nickname;
+    const gender = req.body.gender
+    const datas = [content_uid, user_uid, image_path, date, nickname,gender];
 
     const sql =
-      "INSERT INTO images(content_uid, user_uid, image_path,date) values(?, ?, ?,?)";
+      "INSERT INTO images(content_uid, user_uid, image_path,date,nickname,gender) values(?,?,?,?,?,?)";
     connection.query(sql, datas, (err, rows) => {
       console.log(datas);
       if (err) {
@@ -50,7 +52,6 @@ const imageCtrl = {
         console.log(err);
         res.send(err);
       } else {
-        console.log(row);
         res.send(row);
       }
     });
@@ -83,10 +84,11 @@ const imageCtrl = {
     const from_uid = req.body.from_uid;
     const content_score = req.body.content_score;
     const date = moment().format("YYYY-MM-DD hh:mm:ss A");
-    const datas = [content_uid, to_uid, from_uid, content_score, date];
+    const gender = req.body.gender;
+    const datas = [content_uid, to_uid, from_uid, content_score, date, gender];
 
     const sql =
-      "INSERT INTO score(content_uid, to_uid, from_uid,content_score,date) values(?,?,?,?,?)";
+      "INSERT INTO score(content_uid, to_uid, from_uid,content_score,date,gender) values(?,?,?,?,?,?)";
     connection.query(sql, datas, (err, rows) => {
       console.log(datas);
       if (err) {
