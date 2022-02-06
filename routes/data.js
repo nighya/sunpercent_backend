@@ -1,5 +1,6 @@
 const testCtrl = require("../controllers/testCtrl");
 const userCtrl = require("../controllers/userCtrl");
+const scoreCtrl = require("../controllers/scoreCtrl");
 const router = require("express").Router();
 const middleware = require("../middleware/tokenCheck");
 
@@ -66,5 +67,8 @@ router.route("/getimage/:content_uid").post(imageCtrl.deleteImage);
 
 //image contentscore
 router.route("/contentscore").post(imageCtrl.scoreupload)
+
+//get content score
+router.route("/getscore/:content_uid").get(scoreCtrl.getscore)
 
 module.exports = router;
