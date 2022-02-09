@@ -15,8 +15,8 @@ const imageCtrl = {
     const image_path = `/images/${req.file.filename}`; // image 경로 만들기
     const date = moment().format("YYYY-MM-DD hh:mm:ss A");
     const nickname = req.body.nickname;
-    const gender = req.body.gender
-    const datas = [content_uid, user_uid, image_path, date, nickname,gender];
+    const gender = req.body.gender;
+    const datas = [content_uid, user_uid, image_path, date, nickname, gender];
 
     const sql =
       "INSERT INTO images(content_uid, user_uid, image_path,date,nickname,gender) values(?,?,?,?,?,?)";
@@ -85,16 +85,27 @@ const imageCtrl = {
     const date = moment().format("YYYY-MM-DD hh:mm:ss A");
     const gender = req.body.gender;
     const datas = [content_uid, to_uid, from_uid, content_score, date, gender];
-
+    const confirm_sql = "SELECT 'from_uid' LIKE ? FROM score WHERE content_uid=?";
     const sql =
       "INSERT INTO score(content_uid, to_uid, from_uid,content_score,date,gender) values(?,?,?,?,?,?)";
-    connection.query(sql, datas, (err, rows) => {
-      if (err) {
-        console.error("err : " + err);
-        res.send(err);
+
+    connection.query(confirm_sql,[from_uid, content_uid], (err, data) => {
+      if (data.length > 0) {
+        res.status(400).json({
+          message: "이미 점수 등록한 유저",
+        });
+      } else if (err) {
+        console.log(err);
       } else {
-        console.log("rows: " + JSON.stringify(rows));
-        res.send(rows);
+        connection.query(sql, datas, (err, rows) => {
+          if (err) {
+            console.error("err : " + err);
+            res.send(err);
+          } else { 
+            console.log("rows: " + JSON.stringify(rows));
+            res.send(rows);
+          }
+        });
       }
     });
   },

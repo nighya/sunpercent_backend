@@ -10,6 +10,7 @@ const scoreCtrl = {
             console.log(err);
             res.send(err);
           } else {
+              console.log("score send")
             res.send(row);
           }
         });
