@@ -85,11 +85,11 @@ const imageCtrl = {
     const date = moment().format("YYYY-MM-DD hh:mm:ss A");
     const gender = req.body.gender;
     const datas = [content_uid, to_uid, from_uid, content_score, date, gender];
-    const confirm_sql = "SELECT 'from_uid' LIKE ? FROM score WHERE content_uid=?";
+    const confirm_sql = "SELECT * FROM score WHERE content_uid  LIKE ? AND from_uid LIKE ?";
     const sql =
       "INSERT INTO score(content_uid, to_uid, from_uid,content_score,date,gender) values(?,?,?,?,?,?)";
 
-    connection.query(confirm_sql,[from_uid, content_uid], (err, data) => {
+    connection.query(confirm_sql, [content_uid,from_uid], (err, data) => {
       if (data.length > 0) {
         res.status(400).json({
           message: "이미 점수 등록한 유저",
