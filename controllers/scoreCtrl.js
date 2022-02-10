@@ -37,7 +37,7 @@ const scoreCtrl = {
       var base64Payload = token.split(".")[1];
       var payload = Buffer.from(base64Payload, "base64");
       var result = JSON.parse(payload.toString());
-      console.log("from_uid :  "+from_uid+"   result :  "+Object.values(result)+ "  token   :"+token)
+      // console.log("from_uid :  "+from_uid+"   result :  "+Object.values(result)+ "  token   :"+token)
       if (from_uid=== result.user_uid) {
         connection.query(confirm_sql, [content_uid, from_uid], (err, data) => {
           if (data.length > 0) {
