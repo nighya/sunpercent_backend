@@ -25,6 +25,7 @@ const userCtrl = {
           let accessToken = jwt.sign(
             {
               email: loginbody_param[0],
+              user_uid: row[0].user_uid,
             },
             process.env.JWT_SECRET,
             {
@@ -34,6 +35,7 @@ const userCtrl = {
           let refreshToken = jwt.sign(
             {
               email: loginbody_param[0],
+              user_uid: row[0].user_uid,
             },
             process.env.JWT_SECRET,
             {

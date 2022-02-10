@@ -66,7 +66,7 @@ router.route("/getAllimages").get(imageCtrl.getAllimages);
 router.route("/getimage/:content_uid").post(imageCtrl.deleteImage);
 
 //image contentscore
-router.route("/contentscore").post(imageCtrl.scoreupload)
+router.route("/contentscore").post(middleware.tokenCheck,scoreCtrl.scoreupload)
 
 //get content score
 router.route("/getscore/:content_uid").get(scoreCtrl.getscore)
