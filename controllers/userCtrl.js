@@ -164,7 +164,10 @@ const userCtrl = {
             throw error;
             // console.log(error)
           }
-          res.send(rows);
+          res.status(200).json({
+            profile_image:image_path,
+
+          })
         });
       } else {
         res.status(403).json({
