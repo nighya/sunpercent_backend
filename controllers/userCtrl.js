@@ -54,6 +54,8 @@ const userCtrl = {
               email: row[0].email,
               nickname: row[0].nickname,
               gender: row[0].gender,
+              max_score: row[0].max_score,
+              profile_image:row[0].profile_image,
               // accessToken,
               // refreshToken,
             });
