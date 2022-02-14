@@ -55,7 +55,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.route("/imageupload").post(middleware.tokenCheck, upload.single("image") ,imageCtrl.imageupload);
+router
+  .route("/imageupload")
+  .post(middleware.tokenCheck, upload.single("image"), imageCtrl.imageupload);
 
 //image load
 router.route("/getimage/:content_uid").get(imageCtrl.getimage);
@@ -66,9 +68,20 @@ router.route("/getAllimages").get(imageCtrl.getAllimages);
 router.route("/getimage/:content_uid").post(imageCtrl.deleteImage);
 
 //image contentscore
-router.route("/contentscore").post(middleware.tokenCheck,scoreCtrl.scoreupload)
+router
+  .route("/contentscore")
+  .post(middleware.tokenCheck, scoreCtrl.scoreupload);
 
 //get content score
-router.route("/getscore/:content_uid").get(scoreCtrl.getscore)
+router.route("/getscore/:content_uid").get(scoreCtrl.getscore);
+
+// profile_image update
+router
+  .route("/Mypage/:user_uid")
+  .post(
+    middleware.tokenCheck,
+    upload.single("image"),
+    userCtrl.update_profile_image
+  );
 
 module.exports = router;

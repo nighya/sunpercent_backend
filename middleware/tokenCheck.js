@@ -19,7 +19,7 @@ module.exports = {
     } catch (err) {
       console.log(err);
       res.status(403).send({
-        message: "forbidden Page",
+        message: "token Check forbidden Page",
       });
     }
   },

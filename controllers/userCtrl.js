@@ -2,7 +2,7 @@ const connection = require("../dbconfig");
 const bcrypt = require("bcrypt");
 const uuid = require("uuid-sequential");
 const saltRounds = 10;
-
+var fs = require("fs");
 let jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -13,7 +13,7 @@ const userCtrl = {
 
     connection.query(sql, loginbody_param[0], (err, row) => {
       if (err)
-        return res.status(400).json({      
+        return res.status(400).json({
           error: [
             {
               msg: "id not found!",
@@ -89,7 +89,6 @@ const userCtrl = {
       req.body.nickname,
       req.body.password,
       req.body.gender,
-      
     ];
     const sql = `INSERT INTO members(user_uid,email,nickname,password,gender) VALUES (?,?,?,?,?)`;
     bcrypt.genSalt(saltRounds, function (err, salt) {
@@ -132,8 +131,43 @@ const userCtrl = {
         );
       } else {
         res.status(403).json({
-          message: "fobbiden"
-        })
+          message: "fobbiden",
+        });
+      }
+    }
+  },
+  update_profile_image: async (req, res) => {
+    const user_uid = req.params.user_uid;
+    const image_path = `/images/${req.file.filename}`;
+    const sql = "UPDATE members SET profile_image=? WHERE user_uid =?";
+    const sql_profile_image_paht =
+      "SELECT profile_image FROM members WHERE user_uid LIKE ?";
+    const cookie = req.headers.cookie;
+    const token = cookie.replace("HrefreshToken=", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded) {
+      var base64Payload = token.split(".")[1];
+      var payload = Buffer.from(base64Payload, "base64");
+      var result = JSON.parse(payload.toString());
+      if (req.params.user_uid === result.user_uid) {
+        connection.query(sql_profile_image_paht, user_uid, (err, data) => {
+          try {
+            fs.unlinkSync(`public${Object.values(data[0])}`);
+          } catch (err) {
+            console.log("이미지 없음" + err);
+          }
+        });
+        connection.query(sql, [image_path, user_uid], (error, rows) => {
+          if (error) {
+            throw error;
+            // console.log(error)
+          }
+          res.send(rows);
+        });
+      } else {
+        res.status(403).json({
+          message: "fobbiden",
+        });
       }
     }
   },
