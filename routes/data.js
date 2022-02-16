@@ -82,6 +82,12 @@ router
     middleware.tokenCheck,
     upload.single("image"),
     userCtrl.update_profile_image
-  );
+);
+  
+// getmycontent image
+router
+  .route("/Mypage/mycontentimage/:user_uid")
+  .get(middleware.tokenCheck, imageCtrl.getMycontentimage);
 
 module.exports = router;
+

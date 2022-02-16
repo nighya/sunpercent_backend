@@ -43,6 +43,18 @@ const imageCtrl = {
       }
     });
   },
+  getMycontentimage: (req, res, next) => {
+    const user_uid = req.params.user_uid;
+    const sql = "SELECT * FROM images WHERE user_uid=?";
+    connection.query(sql, [user_uid], (err, row) => {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        res.send(row);
+      }
+    });
+  },
 
   getAllimages: (req, res, next) => {
     const sql = "SELECT * FROM images";
