@@ -88,40 +88,24 @@ const imageCtrl = {
       console.log(err);
     }
   },
+  update_content_score: async (req, res) => {
+    const content_uid = req.body.content_uid;
+    const content_average_score = req.body.content_average_score;
+    const score_count = req.body.score_count
+    const sql =
+      "UPDATE images SET content_average_score=?,score_count=? WHERE content_uid =?";
+    connection.query(sql, [content_average_score, score_count,content_uid], (error, rows) => {
+      if (error) {
+        throw error;
+        // console.log(error)
+      }
+      res.status(200).json({
+        content_average_score: content_average_score,
+        score_count:score_count,
 
-  // scoreupload: (req, res, next) => {
-  //   const content_uid = req.body.content_uid;
-  //   const to_uid = req.body.to_uid;
-  //   const from_uid = req.body.from_uid;
-  //   const content_score = req.body.content_score;
-  //   const date = moment().format("YYYY-MM-DD hh:mm:ss A");
-  //   const gender = req.body.gender;
-  //   const datas = [content_uid, to_uid, from_uid, content_score, date, gender];
-  //   const confirm_sql =
-  //     "SELECT * FROM score WHERE content_uid  LIKE ? AND from_uid LIKE ?";
-  //   const sql =
-  //     "INSERT INTO score(content_uid, to_uid, from_uid,content_score,date,gender) values(?,?,?,?,?,?)";
-
-  //   connection.query(confirm_sql, [content_uid, from_uid], (err, data) => {
-  //     if (data.length > 0) {
-  //       res.status(400).json({
-  //         message: "이미 점수 등록한 유저",
-  //       });
-  //     } else if (err) {
-  //       console.log(err);
-  //     } else {
-  //       connection.query(sql, datas, (err, rows) => {
-  //         if (err) {
-  //           console.error("err : " + err);
-  //           res.send(err);
-  //         } else {
-  //           console.log("rows: " + JSON.stringify(rows));
-  //           res.send(rows);
-  //         }
-  //       });
-  //     }
-  //   });
-  // },
+      })
+    });
+  },
 };
 
 module.exports = imageCtrl;

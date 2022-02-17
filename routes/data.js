@@ -72,6 +72,11 @@ router
   .route("/contentscore")
   .post(middleware.tokenCheck, scoreCtrl.scoreupload);
 
+// image contentscore scorecount
+router
+  .route("/contentscore/:content_uid")
+  .post(middleware.tokenCheck, imageCtrl.update_content_score);
+
 //get content score
 router.route("/getscore/:content_uid").get(scoreCtrl.getscore);
 
@@ -82,12 +87,11 @@ router
     middleware.tokenCheck,
     upload.single("image"),
     userCtrl.update_profile_image
-);
-  
+  );
+
 // getmycontent image
 router
   .route("/Mypage/mycontentimage/:user_uid")
   .get(middleware.tokenCheck, imageCtrl.getMycontentimage);
 
 module.exports = router;
-
