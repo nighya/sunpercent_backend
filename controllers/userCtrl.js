@@ -48,6 +48,7 @@ const userCtrl = {
             res.cookie("HrefreshToken", refreshToken, {
               maxAge: 14 * 24 * 60 * 60 * 1000,
               httpOnly: true,
+              secure : true,
             });
             res.status(200).json({
               user_uid: row[0].user_uid,
