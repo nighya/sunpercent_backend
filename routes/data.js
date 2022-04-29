@@ -10,28 +10,28 @@ const imageCtrl = require("../controllers/imageCtrl");
 
 // api/test/data
 // router.route("/data").get(middleware.isLoggedIn, testCtrl.getDatas).post(testCtrl.insertData);
-router
-  .route("/data")
-  .get(middleware.tokenCheck, testCtrl.getDatas)
-  .post(testCtrl.insertData);
+// router
+//   .route("/data")
+//   .get(middleware.tokenCheck, testCtrl.getDatas)
+//   .post(testCtrl.insertData);
 
-router
-  .route("/UserDataView/:contentId")
-  .delete(testCtrl.deleteData)
-  .post(testCtrl.updateData);
-router.route("/UserDataView/:contentId/Edit").post(testCtrl.updateData);
+// router
+//   .route("/UserDataView/:contentId")
+//   .delete(testCtrl.deleteData)
+//   .post(testCtrl.updateData);
+// router.route("/UserDataView/:contentId/Edit").post(testCtrl.updateData);
 
 //api/test/user
 // router.route("/user").get(middleware.isLoggedIn, testCtrl.getUsers).post(testCtrl.insertUser);
-router
-  .route("/user")
-  .get(middleware.tokenCheck, testCtrl.getUsers)
-  .post(testCtrl.insertUser);
-router
-  .route("/UserUserView/:contentId")
-  .delete(testCtrl.deleteUser)
-  .post(testCtrl.updateUser);
-router.route("/UserUserView/:contentId/Edit").post(testCtrl.updateUser);
+// router
+//   .route("/user")
+//   .get(middleware.tokenCheck, testCtrl.getUsers)
+//   .post(testCtrl.insertUser);
+// router
+//   .route("/UserUserView/:contentId")
+//   .delete(testCtrl.deleteUser)
+//   .post(testCtrl.updateUser);
+// router.route("/UserUserView/:contentId/Edit").post(testCtrl.updateUser);
 
 // /login
 router.route("/login").post(userCtrl.login);
