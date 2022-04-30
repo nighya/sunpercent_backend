@@ -6,17 +6,17 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 // const bcrypt = require("bcrypt-nodejs");
 
-const https = require("https");
-const server = https.createServer(
-  {
-    key: fs.readFileSync("./cert/domain.com.key"),
-    cert: fs.readFileSync("./cert/domain.com.crt"),
-    ca: fs.readFileSync("./cert/rootca.crt"),
-    requestCert: false,
-    rejectUnauthorized: false,
-  },
-  app
-);
+// const https = require("https");
+// const server = https.createServer(
+//   {
+//     key: fs.readFileSync("./cert/domain.com.key"),
+//     cert: fs.readFileSync("./cert/domain.com.crt"),
+//     ca: fs.readFileSync("./cert/rootca.crt"),
+//     requestCert: false,
+//     rejectUnauthorized: false,
+//   },
+//   app
+// );
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

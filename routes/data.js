@@ -1,4 +1,4 @@
-const testCtrl = require("../controllers/testCtrl");
+// const testCtrl = require("../controllers/testCtrl");
 const userCtrl = require("../controllers/userCtrl");
 const scoreCtrl = require("../controllers/scoreCtrl");
 const router = require("express").Router();
