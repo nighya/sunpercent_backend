@@ -26,8 +26,7 @@ const imageCtrl = {
         console.error("err : " + err);
         res.send(err);
       } else {
-        console.log("rows: " + JSON.stringify(rows));
-        res.send(rows);
+        res.sendStatus(200);
       }
     });
   },
@@ -39,7 +38,7 @@ const imageCtrl = {
         console.log(err);
         res.send(err);
       } else {
-        res.send(row);
+        res.send(200);
       }
     });
   },
