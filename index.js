@@ -27,11 +27,16 @@ app.use(cors({ origin: "https://192.168.0.12:8080", credentials: true }));
 app.use(express.static("public"));
 
 const port = 4000;
-server.listen(port, () => {
+app.listen(port, () => {
   console.log("server listening on port", port,`https://192.168.0.12:${port}`);
 });
 
 //가져오기
 app.use("/", require("./routes/data.js"));
+
+app.get("/", (req, res) => {
+  res.send("hi")
+})
+
 
 //입력하기
