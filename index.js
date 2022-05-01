@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 let isDisableKeepAlive = false
 app.use(function(req, res, next) {
   if (isDisableKeepAlive) {
-    res.set(Connection, close)
+    res.set("Connection", "close")
   }
   next()
 })
