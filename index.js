@@ -29,7 +29,7 @@ app.use(express.static("public"));
 
 const port = 4000;
 app.listen(port, () => {
-  process.send(ready)
+  process.send("ready")
   console.log("server listening on port", port, `https://192.168.0.12:${port}`);
 });
 
@@ -49,7 +49,7 @@ app.use(function(req, res, next) {
 })
 
 
-process.on(SIGINT, function () {
+process.on("SIGINT", function () {
   isDisableKeepAlive = true
   app.close(function () {
   console.log('server closed')
