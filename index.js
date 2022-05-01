@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const fs = require("fs");
 const cors = require("cors");
+const http = require("http");
 // const path = require("path");
 const bodyParser = require("body-parser");
 // const bcrypt = require("bcrypt-nodejs");
@@ -28,7 +29,8 @@ app.use(express.static("public"));
 
 const port = 4000;
 app.listen(port, () => {
-  console.log("server listening on port", port,`https://192.168.0.12:${port}`);
+  process.send(ready)
+  console.log("server listening on port", port, `https://192.168.0.12:${port}`);
 });
 
 //가져오기
@@ -38,5 +40,20 @@ app.get("/", (req, res) => {
   res.send("hi")
 })
 
+let isDisableKeepAlive = false
+app.use(function(req, res, next) {
+  if (isDisableKeepAlive) {
+    res.set(Connection, close)
+  }
+  next()
+})
 
+
+process.on(SIGINT, function () {
+  isDisableKeepAlive = true
+  app.close(function () {
+  console.log('server closed')
+  process.exit(0)
+  })
+})
 //입력하기
