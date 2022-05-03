@@ -4,7 +4,7 @@ require("dotenv").config();
 const moment = require("moment");
 
 const scoreCtrl = {
-  getscore: (req, res, next) => {
+  getscore: async (req, res, next) => {
     const content_uid = req.params.content_uid;
     const sql = "SELECT * FROM score WHERE content_uid=?";
     connection.query(sql, [content_uid], (err, row) => {
@@ -38,7 +38,7 @@ const scoreCtrl = {
       var payload = Buffer.from(base64Payload, "base64");
       var result = JSON.parse(payload.toString());
       // console.log("from_uid :  "+from_uid+"   result :  "+Object.values(result)+ "  token   :"+token)
-      if (from_uid=== result.user_uid) {
+      if (from_uid === result.user_uid) {
         connection.query(confirm_sql, [content_uid, from_uid], (err, data) => {
           if (data.length > 0) {
             res.status(400).json({
