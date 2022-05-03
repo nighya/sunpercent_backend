@@ -15,11 +15,22 @@ const imageCtrl = {
     const image_path = `/images/${req.file.filename}`; // image 경로 만들기
     const date = moment().format("YYYY-MM-DD hh:mm:ss A");
     const nickname = req.body.nickname;
+    const content_average_score = 0.0;
+    const score_count = 0;
     const gender = req.body.gender;
-    const datas = [content_uid, user_uid, image_path, date, nickname, gender];
+    const datas = [
+      content_uid,
+      user_uid,
+      image_path,
+      date,
+      nickname,
+      content_average_score,
+      score_count,
+      gender,
+    ];
 
     const sql =
-      "INSERT INTO images(content_uid, user_uid, image_path,date,nickname,gender) values(?,?,?,?,?,?)";
+      "INSERT INTO images(content_uid, user_uid, image_path,date,nickname,content_average_score,score_count,gender) values(?,?,?,?,?,?,?,?)";
     connection.query(sql, datas, (err, rows) => {
       console.log(datas);
       if (err) {
@@ -38,7 +49,7 @@ const imageCtrl = {
         console.log(err);
         res.send(err);
       } else {
-        res.send(200);
+        res.send(row);
       }
     });
   },
@@ -90,20 +101,23 @@ const imageCtrl = {
   update_content_score: async (req, res) => {
     const content_uid = req.body.content_uid;
     const content_average_score = req.body.content_average_score;
-    const score_count = req.body.score_count
+    const score_count = req.body.score_count;
     const sql =
       "UPDATE images SET content_average_score=?,score_count=? WHERE content_uid =?";
-    connection.query(sql, [content_average_score, score_count,content_uid], (error, rows) => {
-      if (error) {
-        throw error;
-        // console.log(error)
+    connection.query(
+      sql,
+      [content_average_score, score_count, content_uid],
+      (error, rows) => {
+        if (error) {
+          throw error;
+          // console.log(error)
+        }
+        res.status(200).json({
+          content_average_score: content_average_score,
+          score_count: score_count,
+        });
       }
-      res.status(200).json({
-        content_average_score: content_average_score,
-        score_count:score_count,
-
-      })
-    });
+    );
   },
 };
 

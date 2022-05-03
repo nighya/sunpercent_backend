@@ -23,14 +23,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/", express.static(__dirname + "/public"));
-app.use(cors({ origin: "https://192.168.0.12:8080", credentials: true }));
+app.use(cors({ origin: "http://192.168.0.12:8080", credentials: true }));
 
 app.use(express.static("public"));
 
 const port = 4000;
 app.listen(port, () => {
   process.send("ready")
-  console.log("server listening on port", port, `https://192.168.0.12:${port}`);
+  console.log("server listening on port", port, `http://192.168.0.12:${port}`);
 });
 
 //가져오기
@@ -57,3 +57,5 @@ process.on("SIGINT", function () {
   })
 })
 //입력하기
+
+
