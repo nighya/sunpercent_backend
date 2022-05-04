@@ -65,7 +65,7 @@ router.route("/getimage/:content_uid").get(imageCtrl.getimage);
 router.route("/getAllimages").get(imageCtrl.getAllimages);
 
 //image delete
-router.route("/getimage/:content_uid").post(imageCtrl.deleteImage);
+router.route("/getimage/:content_uid").post(middleware.tokenCheck,imageCtrl.deleteImage);
 
 //image contentscore
 router

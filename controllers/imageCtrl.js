@@ -80,20 +80,30 @@ const imageCtrl = {
 
   deleteImage: async (req, res) => {
     const image_path = req.body.image_path;
+    const score_sql = "SELECT * FROM score WHERE content_uid=?";
+    const content_sql = "DELETE FROM sunpercent.images WHERE content_uid=?";
     try {
       fs.unlinkSync(`./public${image_path}`);
-      connection.query(
-        "DELETE FROM sunpercent.images WHERE content_uid=?",
-        [req.params.content_uid],
-        (error, rows) => {
-          if (error) {
-            console.log(err);
-            res.send(error);
-          } else {
-            res.send(rows);
-          }
+      connection.query(content_sql, [req.params.content_uid], (error, rows) => {
+        if (error) {
+          console.log(err);
+          res.send(error);
+        } else {
+          res.send(rows);
+          connection.query(
+            score_sql,
+            [req.params.content_uid],
+            (error, rows) => {
+              if (error) {
+                console.log(err);
+                res.send(error);
+              } else {
+                res.send(rows);
+              }
+            }
+          );
         }
-      );
+      });
     } catch (err) {
       console.log(err);
     }
