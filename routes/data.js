@@ -78,7 +78,7 @@ router
   .post(middleware.tokenCheck, imageCtrl.update_content_score);
 
 //get content score
-router.route("/getscore/:content_uid").get(scoreCtrl.getscore);
+router.route("/getscore/:content_uid").get(middleware.tokenCheck,scoreCtrl.getscore);
 
 // profile_image update
 router
