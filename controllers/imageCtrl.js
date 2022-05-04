@@ -24,8 +24,6 @@ const imageCtrl = {
       image_path,
       date,
       nickname,
-      // content_average_score,
-      // score_count,
       gender,
     ];
 
@@ -96,9 +94,7 @@ const imageCtrl = {
               if (err) {
                 console.log("score 에러"+ err);
                 res.send(err);
-              } else {
-                // res.send(row);
-              }
+              } 
             }
           );
           // res.send(rows);
