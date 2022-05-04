@@ -4,6 +4,7 @@ const uuid = require("uuid-sequential");
 const saltRounds = 10;
 var fs = require("fs");
 let jwt = require("jsonwebtoken");
+const { json } = require("body-parser");
 require("dotenv").config();
 
 const userCtrl = {
@@ -56,7 +57,7 @@ const userCtrl = {
               nickname: row[0].nickname,
               gender: row[0].gender,
               max_score: row[0].max_score,
-              profile_image:row[0].profile_image,
+              profile_image: row[0].profile_image,
               // accessToken,
               // refreshToken,
             });
@@ -115,6 +116,35 @@ const userCtrl = {
     //   connection.query(sql, body_param, (err, row) => {});
     // });
   },
+  email_validate: async (req, res) => {
+    const emailbody_param = req.body.email;
+    console.log("email :   " + emailbody_param)
+    const sql = "SELECT email FROM sunpercent.members WHERE email=?";
+    connection.query(sql, emailbody_param, (err, row) => {
+      if (err) {
+        console.log("없음");
+        return res.status(200).json({
+          error: [
+            {
+              msg: "Available Email Addresses",
+            },
+          ],
+        });
+      }
+      if (row.length > 0) {
+        console.log("있음");
+        res.status(200).json({
+          msg: "Email Address Exists",
+        });
+      } else if (row.length == 0) {
+        res.status(200).json({
+          msg: "Email Address empty",
+        });
+      } else {
+        console.log("이메일 유효성 검사 뭔가에러");
+      }
+    });
+  },
 
   getMember: async (req, res) => {
     const cookie = req.headers.cookie;
@@ -142,7 +172,8 @@ const userCtrl = {
   update_profile_image: async (req, res) => {
     const user_uid = req.params.user_uid;
     const image_path = `/images/${req.file.filename}`;
-    const update_sql = "UPDATE sunpercent.members SET profile_image=? WHERE user_uid =?";
+    const update_sql =
+      "UPDATE sunpercent.members SET profile_image=? WHERE user_uid =?";
     const sql_profile_image_path =
       "SELECT profile_image FROM sunpercent.members WHERE user_uid LIKE ?";
     const cookie = req.headers.cookie;
@@ -152,7 +183,7 @@ const userCtrl = {
       var base64Payload = token.split(".")[1];
       var payload = Buffer.from(base64Payload, "base64");
       var result = JSON.parse(payload.toString());
-      console.log("result uid  :   "+result.user_uid)
+      console.log("result uid  :   " + result.user_uid);
       if (req.params.user_uid === result.user_uid) {
         connection.query(sql_profile_image_path, user_uid, (err, data) => {
           try {
@@ -167,9 +198,8 @@ const userCtrl = {
             // console.log(error)
           }
           res.status(200).json({
-            profile_image:image_path,
-
-          })
+            profile_image: image_path,
+          });
         });
       } else {
         res.status(403).json({

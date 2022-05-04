@@ -38,6 +38,7 @@ router.route("/login").post(userCtrl.login);
 
 // /registerUser
 router.route("/register").post(userCtrl.register);
+router.route("/email_validate").post(userCtrl.email_validate);
 
 //  /Mypage
 router.route("/Mypage/:id").get(middleware.tokenCheck, userCtrl.getMember);
