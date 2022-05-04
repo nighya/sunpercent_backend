@@ -142,9 +142,9 @@ const userCtrl = {
   update_profile_image: async (req, res) => {
     const user_uid = req.params.user_uid;
     const image_path = `/images/${req.file.filename}`;
-    const sql = "UPDATE members SET profile_image=? WHERE user_uid =?";
-    const sql_profile_image_paht =
-      "SELECT profile_image FROM members WHERE user_uid LIKE ?";
+    const update_sql = "UPDATE sunpercent.members SET profile_image=? WHERE user_uid =?";
+    const sql_profile_image_path =
+      "SELECT profile_image FROM sunpercent.members WHERE user_uid LIKE ?";
     const cookie = req.headers.cookie;
     const token = cookie.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -152,15 +152,16 @@ const userCtrl = {
       var base64Payload = token.split(".")[1];
       var payload = Buffer.from(base64Payload, "base64");
       var result = JSON.parse(payload.toString());
+      console.log("result uid  :   "+result.user_uid)
       if (req.params.user_uid === result.user_uid) {
-        connection.query(sql_profile_image_paht, user_uid, (err, data) => {
+        connection.query(sql_profile_image_path, user_uid, (err, data) => {
           try {
             fs.unlinkSync(`public${Object.values(data[0])}`);
           } catch (err) {
             console.log("이미지 없음" + err);
           }
         });
-        connection.query(sql, [image_path, user_uid], (error, rows) => {
+        connection.query(update_sql, [image_path, user_uid], (error, rows) => {
           if (error) {
             throw error;
             // console.log(error)
