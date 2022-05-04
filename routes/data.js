@@ -39,7 +39,7 @@ router.route("/login").post(userCtrl.login);
 // /registerUser
 router.route("/register").post(userCtrl.register);
 
-//api/test/Mypage
+//  /Mypage
 router.route("/Mypage/:id").get(middleware.tokenCheck, userCtrl.getMember);
 
 //image upload

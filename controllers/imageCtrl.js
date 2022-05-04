@@ -83,7 +83,7 @@ const imageCtrl = {
     try {
       fs.unlinkSync(`./public${image_path}`);
       connection.query(
-        "DELETE FROM test.images WHERE content_uid=?",
+        "DELETE FROM sunpercent.images WHERE content_uid=?",
         [req.params.content_uid],
         (error, rows) => {
           if (error) {
