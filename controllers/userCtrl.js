@@ -111,28 +111,23 @@ const userCtrl = {
         });
       });
     });
-    // bcrypt.hash(body_param[1], saltRounds, (error, hash) => {
-    //   body_param[1] = hash;
-    //   connection.query(sql, body_param, (err, row) => {});
-    // });
+
   },
   email_validate: async (req, res) => {
     const emailbody_param = req.body.email;
-    console.log("email :   " + emailbody_param)
+    // console.log("email :   " + emailbody_param);
     const sql = "SELECT email FROM sunpercent.members WHERE email=?";
     connection.query(sql, emailbody_param, (err, row) => {
       if (err) {
-        console.log("없음");
         return res.status(200).json({
           error: [
             {
-              msg: "Available Email Addresses",
+              msg: "mail validate error something",
             },
           ],
         });
       }
       if (row.length > 0) {
-        console.log("있음");
         res.status(200).json({
           msg: "Email Address Exists",
         });
@@ -142,6 +137,33 @@ const userCtrl = {
         });
       } else {
         console.log("이메일 유효성 검사 뭔가에러");
+      }
+    });
+  },
+  nickname_validate: async (req, res) => {
+    const nicknamebody_param = req.body.nickname;
+    // console.log("nicknamebody_param :   " + nicknamebody_param);
+    const sql = "SELECT nickname FROM sunpercent.members WHERE nickname=?";
+    connection.query(sql, nicknamebody_param, (err, row) => {
+      if (err) {
+        return res.status(200).json({
+          error: [
+            {
+              msg: "error Nickname",
+            },
+          ],
+        });
+      }
+      if (row.length > 0) {
+        res.status(200).json({
+          msg: "Nickname Exists",
+        });
+      } else if (row.length == 0) {
+        res.status(200).json({
+          msg: "Nickname empty",
+        });
+      } else {
+        console.log("닉네임 유효성 검사 뭔가에러");
       }
     });
   },
@@ -188,9 +210,7 @@ const userCtrl = {
         connection.query(sql_profile_image_path, user_uid, (err, data) => {
           try {
             fs.unlinkSync(`public${Object.values(data[0])}`);
-          } catch (err) {
-            console.log("이미지 없음" + err);
-          }
+          } catch (err) {}
         });
         connection.query(update_sql, [image_path, user_uid], (error, rows) => {
           if (error) {
