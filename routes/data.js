@@ -66,7 +66,9 @@ router.route("/getimage/:content_uid").get(imageCtrl.getimage);
 router.route("/getAllimages").get(imageCtrl.getAllimages);
 
 //image delete
-router.route("/getimage/:content_uid").post(middleware.tokenCheck,imageCtrl.deleteImage);
+router
+  .route("/getimage/:content_uid")
+  .post(middleware.tokenCheck, imageCtrl.deleteImage);
 
 //image contentscore
 router
@@ -79,7 +81,9 @@ router
   .post(middleware.tokenCheck, imageCtrl.update_content_score);
 
 //get content score
-router.route("/getscore/:content_uid").get(middleware.tokenCheck,scoreCtrl.getscore);
+router
+  .route("/getscore/:content_uid")
+  .get(middleware.tokenCheck, scoreCtrl.getscore);
 
 // profile_image update
 router
@@ -95,4 +99,11 @@ router
   .route("/Mypage/mycontentimage/:user_uid")
   .get(middleware.tokenCheck, imageCtrl.getMycontentimage);
 
+//search content
+router.route("/content/search").post(imageCtrl.search_content);
+
+
+
 module.exports = router;
+
+

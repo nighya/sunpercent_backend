@@ -205,7 +205,7 @@ const userCtrl = {
       var base64Payload = token.split(".")[1];
       var payload = Buffer.from(base64Payload, "base64");
       var result = JSON.parse(payload.toString());
-      console.log("result uid  :   " + result.user_uid);
+      // console.log("result uid  :   " + result.user_uid);
       if (req.params.user_uid === result.user_uid) {
         connection.query(sql_profile_image_path, user_uid, (err, data) => {
           try {
@@ -223,7 +223,7 @@ const userCtrl = {
         });
       } else {
         res.status(403).json({
-          message: "fobbiden",
+          message: "권한없음fobbiden",
         });
       }
     }

@@ -18,14 +18,7 @@ const imageCtrl = {
     // const content_average_score = 0.0;
     // const score_count = 0;
     const gender = req.body.gender;
-    const datas = [
-      content_uid,
-      user_uid,
-      image_path,
-      date,
-      nickname,
-      gender,
-    ];
+    const datas = [content_uid, user_uid, image_path, date, nickname, gender];
 
     const sql =
       "INSERT INTO images(content_uid, user_uid, image_path,date,nickname,gender) values(?,?,?,?,?,?)";
@@ -84,19 +77,15 @@ const imageCtrl = {
       fs.unlinkSync(`./public${image_path}`);
       connection.query(content_sql, [req.params.content_uid], (error, rows) => {
         if (error) {
-          console.log("content 에러"+error);
+          console.log("content 에러" + error);
           res.send(error);
         } else {
-          connection.query(
-            score_sql,
-            [req.params.content_uid],
-            (err, row) => {
-              if (err) {
-                console.log("score 에러"+ err);
-                res.send(err);
-              } 
+          connection.query(score_sql, [req.params.content_uid], (err, row) => {
+            if (err) {
+              console.log("score 에러" + err);
+              res.send(err);
             }
-          );
+          });
           // res.send(rows);
           res.sendStatus(200);
         }
@@ -127,6 +116,36 @@ const imageCtrl = {
         }
       );
     }
+  },
+  search_content: async (req, res) => {
+    const nicknamebody_param = req.body.nickname;
+    // console.log("email :   " + emailbody_param);
+    const sql =
+      `SELECT content_uid,image_path,date,nickname FROM sunpercent.images WHERE nickname LIKE "%"?"%"`;
+    connection.query(sql, nicknamebody_param, (err, row) => {
+      if (err) {
+        return res.status(400).json({
+          error: [
+            {
+              msg: "search error something_1",
+            },
+          ],
+        });
+      }
+      if (row.length > 0) {
+        // res.status(200).json({
+        //   msg: "Email Address Exists",
+        // });
+        res.send(row);
+      } else if (row.length == 0) {
+        console.log("row : " + row);
+        res.status(200).json({
+          msg: "No Data",
+        });
+      } else {
+        console.log("search error something_2");
+      }
+    });
   },
 };
 
