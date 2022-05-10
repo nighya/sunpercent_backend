@@ -34,13 +34,22 @@ const imageCtrl = {
   },
   getimage: (req, res, next) => {
     const content_uid = req.params.content_uid;
-    const sql = "SELECT * FROM images WHERE content_uid=?";
-    connection.query(sql, [content_uid], (err, row) => {
-      if (err) {
-        console.log(err);
-        res.send(err);
+    const select_sql = "SELECT * FROM images WHERE content_uid=?";
+    const update_count_sql =
+      "UPDATE sunpercent.images SET view_count=view_count+1 WHERE content_uid=?";
+    connection.query(update_count_sql, [content_uid], (error, row) => {
+      if (error) {
+        console.log("update view count error :  " + error);
+        res.send(error);
       } else {
-        res.send(row);
+        connection.query(select_sql, [content_uid], (err, rows) => {
+          if (err) {
+            console.log(err);
+            res.send(err);
+          } else {
+            res.send(rows);
+          }
+        });
       }
     });
   },
@@ -120,8 +129,7 @@ const imageCtrl = {
   search_content: async (req, res) => {
     const nicknamebody_param = req.body.nickname;
     // console.log("email :   " + emailbody_param);
-    const sql =
-      `SELECT content_uid,image_path,date,nickname FROM sunpercent.images WHERE nickname LIKE "%"?"%"`;
+    const sql = `SELECT content_uid,image_path,date,nickname FROM sunpercent.images WHERE nickname LIKE "%"?"%"`;
     connection.query(sql, nicknamebody_param, (err, row) => {
       if (err) {
         return res.status(400).json({
