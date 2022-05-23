@@ -7,13 +7,30 @@ const scoreCtrl = {
   getscore: async (req, res, next) => {
     const content_uid = req.params.content_uid;
     const sql = "SELECT * FROM score WHERE content_uid=?";
+    const cookie = req.headers.cookie;
+    const token = cookie.replace("HrefreshToken=", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded) {
+    }
     connection.query(sql, [content_uid], (err, row) => {
       if (err) {
         console.log(err);
         res.send(err);
-      } else {
-        console.log("score send");
-        res.send(row);
+      } else if (decoded) {
+        var base64Payload = token.split(".")[1];
+        var payload = Buffer.from(base64Payload, "base64");
+        var result = JSON.parse(payload.toString());
+        const content_user_uid = JSON.stringify(row[0].to_uid);
+        const current_user_uid = JSON.stringify(result.user_uid);
+        console.log("score send  :  " + JSON.stringify(row[0].to_uid));
+        console.log("score send result :  " + JSON.stringify(result.user_uid));
+        if (content_user_uid === current_user_uid) {
+          console.log("점수보냄");
+          res.send(row);
+        } else {
+          console.log("점수안보냄")
+        }
       }
     });
   },
@@ -51,16 +68,18 @@ const scoreCtrl = {
           } else {
             connection.query(sql, datas, (err, rows) => {
               if (err) {
-                console.error("err : " + err);
+                // console.error("err : " + err);
                 res.send(err);
               } else {
                 console.log("rows: " + JSON.stringify(rows));
                 res.send(rows);
                 connection.query(point_sql, from_uid, (err_1, row_1) => {
                   if (err_1) {
-                    console.log("point 1점 추가 에러   : "+err_1)
+                    console.log("point 1점 추가 에러   : " + err_1);
                   } else {
-                    console.log("point 1점 추가 성공   : "+JSON.stringify(row_1))
+                    console.log(
+                      "point 1점 추가 성공   : " + JSON.stringify(row_1)
+                    );
                   }
                 });
               }

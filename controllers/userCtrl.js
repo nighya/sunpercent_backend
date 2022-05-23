@@ -200,10 +200,10 @@ const userCtrl = {
       var base64Payload = token.split(".")[1];
       var payload = Buffer.from(base64Payload, "base64");
       var result = JSON.parse(payload.toString());
-      
-      console.log("req.body1 :  " + JSON.stringify(req.body));
-      console.log("req.body_confirm :  " + Object.keys(req.body)[0]);
-      console.log("result.user_uid :  " + (result.user_uid));
+
+      // console.log("req.body1 :  " + JSON.stringify(req.body));
+      // console.log("req.body_confirm :  " + Object.keys(req.body)[0]);
+      // console.log("result.user_uid :  " + (result.user_uid));
 
       if (user_uid === result.user_uid) {
         connection.query(
@@ -215,7 +215,7 @@ const userCtrl = {
           }
         );
       } else {
-        console.log("else req.body2 :  " + JSON.stringify(req.body));
+        // console.log("else req.body2 :  " + JSON.stringify(req.body));
         res.status(403).json({
           message: "fobbiden",
         });
