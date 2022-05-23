@@ -191,28 +191,34 @@ const userCtrl = {
   //     }
   //   }
   // },
-  getUser: async (req, res) => {
+  getUserPoint: async (req, res) => {
     const cookie = req.headers.cookie;
+    const user_uid = Object.keys(req.body)[0]
     const token = cookie.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded) {
       var base64Payload = token.split(".")[1];
       var payload = Buffer.from(base64Payload, "base64");
       var result = JSON.parse(payload.toString());
-      console.log("req.body :  " + Object.keys(req.body)[0]);
-      if (req.body === result.id) {
+      
+      console.log("req.body1 :  " + JSON.stringify(req.body));
+      console.log("req.body_confirm :  " + Object.keys(req.body)[0]);
+      console.log("result.user_uid :  " + (result.user_uid));
+
+      if (user_uid === result.user_uid) {
         connection.query(
-          "SELECT * FROM `sunpercent`.`members` WHERE user_uid=?",
-          [req.body],
+          "SELECT point FROM `sunpercent`.`members` WHERE user_uid=?",
+          [user_uid],
           (error, rows) => {
+            console.log("getUser point 성공")
             res.send(rows);
           }
         );
       } else {
-        console.log("req.body :  " + JSON.stringify(req.body));
-        // res.status(403).json({
-        //   message: "fobbiden",
-        // });
+        console.log("else req.body2 :  " + JSON.stringify(req.body));
+        res.status(403).json({
+          message: "fobbiden",
+        });
       }
     }
   },

@@ -43,7 +43,7 @@ router.route("/nickname_validate").post(userCtrl.nickname_validate);
 
 
 //  /getUser
-router.route("/getUser").post(middleware.tokenCheck, userCtrl.getUser);
+router.route("/getUserPoint").post(middleware.tokenCheck, userCtrl.getUserPoint);
 
 //image upload
 const storage = multer.diskStorage({
