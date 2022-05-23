@@ -22,22 +22,34 @@ const imageCtrl = {
 
     const sql =
       "INSERT INTO images(content_uid, user_uid, image_path,date,nickname,gender) values(?,?,?,?,?,?)";
+    const confirm_point_sql = "SELECT point FROM members WHERE user_uid=?";
     const point_sql =
       "UPDATE sunpercent.members SET point=point-2 WHERE user_uid=?";
-    connection.query(sql, datas, (err, rows) => {
-      console.log(datas);
-      if (err) {
-        console.error("err : " + err);
-        res.send(err);
+
+    connection.query(confirm_point_sql, user_uid, (error_1, row_1) => {
+      if (error_1) {
+        res.send(error_1);
+      } else if (JSON.stringify(row_1[0].point) < 2) {
+        fs.unlinkSync(`./public${image_path}`);
+        res.sendStatus(400);
+        console.log("row_1 :  " + JSON.stringify(row_1[0].point));
       } else {
-        connection.query(point_sql, user_uid, (err_1, row_1) => {
-          if (err_1) {
-            console.log("point 2점 사용 에러   : " + err_1);
+        connection.query(sql, datas, (error_2, row_2) => {
+          console.log(datas);
+          if (error_2) {
+            console.error("err : " + error_2);
+            res.send(error_2);
           } else {
-            console.log("point 2점 사용 성공   : " + JSON.stringify(row_1));
+            connection.query(point_sql, user_uid, (error_3, row_3) => {
+              if (error_3) {
+                console.log("point 2점 사용 에러   : " + error_3);
+              } else {
+                console.log("point 2점 사용 성공   : " + JSON.stringify(row_3));
+              }
+            });
+            res.sendStatus(200);
           }
         });
-        res.sendStatus(200);
       }
     });
   },
