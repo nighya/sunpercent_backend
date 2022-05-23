@@ -8,20 +8,36 @@ const scoreCtrl = {
     const content_uid = req.params.content_uid;
     const current_user_uid = Object.keys(req.body)[0];
     const sql = "SELECT * FROM score WHERE content_uid=?";
-    connection.query(sql, [content_uid], (err, row) => {
-      if (err) {
-        console.log(err);
-        res.send(err);
+    const other_user_sql =
+      "SELECT * FROM score WHERE content_uid  LIKE ? AND from_uid LIKE ?";
+    connection.query(sql, [content_uid], (err_1, row_1) => {
+      if (err_1) {
+        console.log(err_1);
+        res.send(err_1);
       } else {
-        // console.log("score send row :  " + row[0].to_uid);
+        // console.log("score send row :  " + row_1[0].to_uid);
         // console.log("score send content_uid :  " + content_uid);
         // console.log("score send current_user_uid :  " + current_user_uid);
 
-        if (row[0].to_uid === current_user_uid) {
+        if (row_1[0].to_uid === current_user_uid) {
           console.log("점수보냄");
-          res.send(row);
+          res.send(row_1);
         } else {
-          console.log("점수안보냄");
+          connection.query(
+            other_user_sql,
+            [content_uid, current_user_uid],
+            (err_2, row_2) => {
+              if (row_2.length > 0) {
+                // console.log("점수안보냄 row    :" + JSON.stringify(row_2));
+                console.log(
+                  "점수안보냄 and  row_2.length :    " + row_2.length
+                );
+                res.send(row_2);
+              } else {
+                console.log("점수안보냄 에러 :  " + err_2);
+              }
+            }
+          );
         }
       }
     });
