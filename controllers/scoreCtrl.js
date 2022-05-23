@@ -6,30 +6,22 @@ const moment = require("moment");
 const scoreCtrl = {
   getscore: async (req, res, next) => {
     const content_uid = req.params.content_uid;
+    const current_user_uid = Object.keys(req.body)[0];
     const sql = "SELECT * FROM score WHERE content_uid=?";
-    const cookie = req.headers.cookie;
-    const token = cookie.replace("HrefreshToken=", "");
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    if (decoded) {
-    }
     connection.query(sql, [content_uid], (err, row) => {
       if (err) {
         console.log(err);
         res.send(err);
-      } else if (decoded) {
-        var base64Payload = token.split(".")[1];
-        var payload = Buffer.from(base64Payload, "base64");
-        var result = JSON.parse(payload.toString());
-        const content_user_uid = JSON.stringify(row[0].to_uid);
-        const current_user_uid = JSON.stringify(result.user_uid);
-        console.log("score send  :  " + JSON.stringify(row[0].to_uid));
-        console.log("score send result :  " + JSON.stringify(result.user_uid));
-        if (content_user_uid === current_user_uid) {
+      } else {
+        // console.log("score send row :  " + row[0].to_uid);
+        // console.log("score send content_uid :  " + content_uid);
+        // console.log("score send current_user_uid :  " + current_user_uid);
+
+        if (row[0].to_uid === current_user_uid) {
           console.log("점수보냄");
           res.send(row);
         } else {
-          console.log("점수안보냄")
+          console.log("점수안보냄");
         }
       }
     });

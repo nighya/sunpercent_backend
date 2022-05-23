@@ -85,8 +85,8 @@ router
 //get content score
 router
   .route("/getscore/:content_uid")
-  .get(middleware.tokenCheck, scoreCtrl.getscore);
-
+  .post(middleware.tokenCheck, scoreCtrl.getscore);
+ 
 // profile_image update
 router
   .route("/Mypage/:user_uid")
