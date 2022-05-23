@@ -40,8 +40,10 @@ router.route("/login").post(userCtrl.login);
 router.route("/register").post(userCtrl.register);
 router.route("/email_validate").post(userCtrl.email_validate);
 router.route("/nickname_validate").post(userCtrl.nickname_validate);
-//  /Mypage
-router.route("/Mypage/:id").get(middleware.tokenCheck, userCtrl.getMember);
+
+
+//  /getUser
+router.route("/getUser").post(middleware.tokenCheck, userCtrl.getUser);
 
 //image upload
 const storage = multer.diskStorage({
@@ -102,8 +104,4 @@ router
 //search content
 router.route("/content/search").post(imageCtrl.search_content);
 
-
-
 module.exports = router;
-
-

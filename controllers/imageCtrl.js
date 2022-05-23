@@ -22,12 +22,21 @@ const imageCtrl = {
 
     const sql =
       "INSERT INTO images(content_uid, user_uid, image_path,date,nickname,gender) values(?,?,?,?,?,?)";
+    const point_sql =
+      "UPDATE sunpercent.members SET point=point-2 WHERE user_uid=?";
     connection.query(sql, datas, (err, rows) => {
       console.log(datas);
       if (err) {
         console.error("err : " + err);
         res.send(err);
       } else {
+        connection.query(point_sql, user_uid, (err_1, row_1) => {
+          if (err_1) {
+            console.log("point 2점 사용 에러   : " + err_1);
+          } else {
+            console.log("point 2점 사용 성공   : " + JSON.stringify(row_1));
+          }
+        });
         res.sendStatus(200);
       }
     });

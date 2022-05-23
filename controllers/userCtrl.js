@@ -58,6 +58,7 @@ const userCtrl = {
               gender: row[0].gender,
               max_score: row[0].max_score,
               profile_image: row[0].profile_image,
+              point: row[0].point,
               // accessToken,
               // refreshToken,
             });
@@ -111,7 +112,6 @@ const userCtrl = {
         });
       });
     });
-
   },
   email_validate: async (req, res) => {
     const emailbody_param = req.body.email;
@@ -168,7 +168,30 @@ const userCtrl = {
     });
   },
 
-  getMember: async (req, res) => {
+  // getMember: async (req, res) => {
+  //   const cookie = req.headers.cookie;
+  //   const token = cookie.replace("HrefreshToken=", "");
+  //   const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  //   if (decoded) {
+  //     var base64Payload = token.split(".")[1];
+  //     var payload = Buffer.from(base64Payload, "base64");
+  //     var result = JSON.parse(payload.toString());
+  //     if (req.params.id === result.id) {
+  //       connection.query(
+  //         "SELECT * FROM `test`.`member` WHERE id=?",
+  //         [req.params.id],
+  //         (error, rows) => {
+  //           res.send(rows);
+  //         }
+  //       );
+  //     } else {
+  //       res.status(403).json({
+  //         message: "fobbiden",
+  //       });
+  //     }
+  //   }
+  // },
+  getUser: async (req, res) => {
     const cookie = req.headers.cookie;
     const token = cookie.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -176,18 +199,20 @@ const userCtrl = {
       var base64Payload = token.split(".")[1];
       var payload = Buffer.from(base64Payload, "base64");
       var result = JSON.parse(payload.toString());
-      if (req.params.id === result.id) {
+      console.log("req.body :  " + Object.keys(req.body)[0]);
+      if (req.body === result.id) {
         connection.query(
-          "SELECT * FROM `test`.`member` WHERE id=?",
-          [req.params.id],
+          "SELECT * FROM `sunpercent`.`members` WHERE user_uid=?",
+          [req.body],
           (error, rows) => {
             res.send(rows);
           }
         );
       } else {
-        res.status(403).json({
-          message: "fobbiden",
-        });
+        console.log("req.body :  " + JSON.stringify(req.body));
+        // res.status(403).json({
+        //   message: "fobbiden",
+        // });
       }
     }
   },

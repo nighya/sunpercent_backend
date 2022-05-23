@@ -29,6 +29,8 @@ const scoreCtrl = {
       "SELECT * FROM score WHERE content_uid  LIKE ? AND from_uid LIKE ?";
     const sql =
       "INSERT INTO score(content_uid, to_uid, from_uid,content_score,date,gender) values(?,?,?,?,?,?)";
+    const point_sql =
+      "UPDATE sunpercent.members SET point=point+1 WHERE user_uid=?";
     const cookie = req.headers.cookie;
     const token = cookie.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -54,6 +56,13 @@ const scoreCtrl = {
               } else {
                 console.log("rows: " + JSON.stringify(rows));
                 res.send(rows);
+                connection.query(point_sql, from_uid, (err_1, row_1) => {
+                  if (err_1) {
+                    console.log("point 1점 추가 에러   : "+err_1)
+                  } else {
+                    console.log("point 1점 추가 성공   : "+JSON.stringify(row_1))
+                  }
+                });
               }
             });
           }
