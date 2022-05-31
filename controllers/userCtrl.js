@@ -6,11 +6,21 @@ var fs = require("fs");
 let jwt = require("jsonwebtoken");
 const { json } = require("body-parser");
 require("dotenv").config();
+const dayjs = require("dayjs");
 
 const userCtrl = {
   login: async (req, res) => {
     const loginbody_param = [req.body.email, req.body.password];
+    const d = dayjs();
+    const user_login_date = d.format("YYYY-MM-DD HH:mm:ss");
+    const user_login_ip = req.body.user_login_ip
+    const login_history_param = [
+      req.body.email,
+      user_login_ip,
+      user_login_date,
+    ];
     const sql = "SELECT * FROM members WHERE email=?";
+    const login_history_sql = `INSERT INTO login_history(email,user_login_ip,user_login_date) VALUES (?,?,?)`;
 
     connection.query(sql, loginbody_param[0], (err, row) => {
       if (err)
@@ -46,6 +56,17 @@ const userCtrl = {
 
           if (result) {
             //성공
+            connection.query(
+              login_history_sql,
+              login_history_param,
+              (err, row) => {
+                if (err) {
+                  console.log("히스토리 에러");
+                  console.log("user_login_ip  :  " + JSON.stringify (user_login_ip));
+                  
+                }
+              }
+            );
             res.cookie("HrefreshToken", refreshToken, {
               maxAge: 14 * 24 * 60 * 60 * 1000,
               httpOnly: true,
@@ -193,7 +214,7 @@ const userCtrl = {
   // },
   getUserPoint: async (req, res) => {
     const cookie = req.headers.cookie;
-    const user_uid = Object.keys(req.body)[0]
+    const user_uid = Object.keys(req.body)[0];
     const token = cookie.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded) {
@@ -210,7 +231,7 @@ const userCtrl = {
           "SELECT point FROM `sunpercent`.`members` WHERE user_uid=?",
           [user_uid],
           (error, rows) => {
-            console.log("getUser point 성공")
+            console.log("getUser point 성공");
             res.send(rows);
           }
         );
