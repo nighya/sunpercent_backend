@@ -14,6 +14,8 @@ const scoreCtrl = {
       if (err_1) {
         console.log(err_1);
         res.send(err_1);
+      } else if (row_1.length <= 0) {
+        res.send(row_1)
       } else {
         // console.log("score send row :  " + row_1[0].to_uid);
         // console.log("score send content_uid :  " + content_uid);
