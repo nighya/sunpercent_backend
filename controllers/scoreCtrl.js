@@ -76,14 +76,14 @@ const scoreCtrl = {
               message: "이미 점수 등록한 유저",
             });
           } else if (err) {
-            console.log(err);
+            console.log("점수주기 에러   :   "+err);
           } else {
             connection.query(sql, datas, (err, rows) => {
               if (err) {
                 // console.error("err : " + err);
                 res.send(err);
               } else {
-                console.log("rows: " + JSON.stringify(rows));
+                // console.log("rows: " + JSON.stringify(rows));
                 res.send(rows);
                 connection.query(point_sql, from_uid, (err_1, row_1) => {
                   if (err_1) {

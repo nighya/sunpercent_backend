@@ -19,12 +19,15 @@ const imageCtrl = {
     // const score_count = 0;
     const gender = req.body.gender;
     const datas = [content_uid, user_uid, image_path, date, nickname, gender];
+    const history_datas = [user_uid, "-2", date];
 
     const sql =
       "INSERT INTO images(content_uid, user_uid, image_path,date,nickname,gender) values(?,?,?,?,?,?)";
     const confirm_point_sql = "SELECT point FROM members WHERE user_uid=?";
     const point_sql =
       "UPDATE sunpercent.members SET point=point-2 WHERE user_uid=?";
+    const point_history_sql =
+      "INSERT INTO point_history(user_uid, point_value, date) values(?,?,?)";
 
     connection.query(confirm_point_sql, user_uid, (error_1, row_1) => {
       if (error_1) {
@@ -32,7 +35,7 @@ const imageCtrl = {
       } else if (JSON.stringify(row_1[0].point) < 2) {
         fs.unlinkSync(`./public${image_path}`);
         res.sendStatus(400);
-        console.log("row_1 :  " + JSON.stringify(row_1[0].point));
+        // console.log("row_1 :  " + JSON.stringify(row_1[0].point));
       } else {
         connection.query(sql, datas, (error_2, row_2) => {
           console.log(datas);
@@ -44,7 +47,21 @@ const imageCtrl = {
               if (error_3) {
                 console.log("point 2점 사용 에러   : " + error_3);
               } else {
-                console.log("point 2점 사용 성공   : " + JSON.stringify(row_3));
+                connection.query(
+                  point_history_sql,
+                  history_datas,
+                  (error_4, row_4) => {
+                    if (error_4) {
+                      console.log(
+                        "image upload point history 에러   " + error_4
+                      );
+                    } else {
+                      console.log(
+                        "point 2점 사용 성공   : " + JSON.stringify(row_3)
+                      );
+                    }
+                  }
+                );
               }
             });
             res.sendStatus(200);
