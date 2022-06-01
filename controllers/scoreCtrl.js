@@ -32,11 +32,16 @@ const scoreCtrl = {
               if (row_2.length > 0) {
                 // console.log("점수안보냄 row    :" + JSON.stringify(row_2));
                 // console.log(
-                //   "점수안보냄 and  row_2.length :    " + row_2.length
+                // "점수안보냄  row_2.길이 :    " + row_2.length
                 // );
                 res.send(row_2);
+              } else if (row_2.length <= 0 || row_2 == null) {
+                // console.log("점수안보냄   row_2 :  " + row_2);
+                res.send(row_2);
               } else {
-                // console.log("점수안보냄 에러 :  " + err_2);
+                // console.log(
+                //   "점수안보냄 에러 :  " + err_2 + "     row_2 :  " + row_2
+                // );
               }
             }
           );
@@ -76,7 +81,7 @@ const scoreCtrl = {
               message: "이미 점수 등록한 유저",
             });
           } else if (err) {
-            console.log("점수주기 에러   :   "+err);
+            console.log("점수주기 에러   :   " + err);
           } else {
             connection.query(sql, datas, (err, rows) => {
               if (err) {
