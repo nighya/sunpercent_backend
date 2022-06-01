@@ -15,14 +15,14 @@ const scoreCtrl = {
         console.log(err_1);
         res.send(err_1);
       } else if (row_1.length <= 0) {
-        res.send(row_1)
+        res.send(row_1);
       } else {
         // console.log("score send row :  " + row_1[0].to_uid);
         // console.log("score send content_uid :  " + content_uid);
         // console.log("score send current_user_uid :  " + current_user_uid);
 
         if (row_1[0].to_uid === current_user_uid) {
-          console.log("점수보냄");
+          // console.log("점수보냄");
           res.send(row_1);
         } else {
           connection.query(
@@ -31,12 +31,12 @@ const scoreCtrl = {
             (err_2, row_2) => {
               if (row_2.length > 0) {
                 // console.log("점수안보냄 row    :" + JSON.stringify(row_2));
-                console.log(
-                  "점수안보냄 and  row_2.length :    " + row_2.length
-                );
+                // console.log(
+                //   "점수안보냄 and  row_2.length :    " + row_2.length
+                // );
                 res.send(row_2);
               } else {
-                console.log("점수안보냄 에러 :  " + err_2);
+                // console.log("점수안보냄 에러 :  " + err_2);
               }
             }
           );
@@ -58,6 +58,8 @@ const scoreCtrl = {
       "INSERT INTO score(content_uid, to_uid, from_uid,content_score,date,gender) values(?,?,?,?,?,?)";
     const point_sql =
       "UPDATE sunpercent.members SET point=point+1 WHERE user_uid=?";
+    const point_history_sql =
+      "INSERT INTO point_history(user_uid, point_value, date) values(?,?,?)";
     const cookie = req.headers.cookie;
     const token = cookie.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -87,8 +89,31 @@ const scoreCtrl = {
                   if (err_1) {
                     console.log("point 1점 추가 에러   : " + err_1);
                   } else {
-                    console.log(
-                      "point 1점 추가 성공   : " + JSON.stringify(row_1)
+                    const point_history_arr = [from_uid, "1", date];
+
+                    // console.log(
+                    //   "point_history obj user_uid :  " +
+                    //   point_history_arr[0]
+                    // );
+                    // console.log(
+                    //   "point_history obj point_value :  " +
+                    //   point_history_arr[1]
+                    // );
+                    // console.log(
+                    //   "point_history obj date :  " + point_history_arr[2]
+                    // );
+                    connection.query(
+                      point_history_sql,
+                      point_history_arr,
+                      (err_2, row_2) => {
+                        if (err_2) {
+                          console.log("point_history 에러  :  " + err_2);
+                        } else {
+                          // console.log(
+                          //   "point 1점 추가 성공   : " + JSON.stringify(row_1)
+                          // );
+                        }
+                      }
                     );
                   }
                 });

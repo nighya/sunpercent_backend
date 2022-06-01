@@ -231,7 +231,7 @@ const userCtrl = {
           "SELECT point FROM `sunpercent`.`members` WHERE user_uid=?",
           [user_uid],
           (error, rows) => {
-            console.log("getUser point 성공");
+            // console.log("getUser point 성공");
             res.send(rows);
           }
         );
