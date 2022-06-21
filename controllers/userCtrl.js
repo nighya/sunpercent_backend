@@ -13,14 +13,14 @@ const mailer = require('./mail.js');
 
 
 const userCtrl = {
-  mailTest: async (req, res) => {
+  PasswordResetMailSend: async (req, res) => {
     const { email } = req.body;
     let emailParam = {
       toEmail: email,
       subject: "Test email From youngho",
       text:"테스트여"
     }
-    mailer.sendGmail(emailParam)
+    mailer.sendMail(emailParam)
     res.status(200).send("성공")
   },
 

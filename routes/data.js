@@ -104,6 +104,6 @@ router
 //search content
 router.route("/content/search").post(imageCtrl.search_content);
 
-router.route("/testmail").post(userCtrl.mailTest);
+router.route("/login/forgotpassword").post(userCtrl.PasswordResetMailSend);
 
 module.exports = router;
