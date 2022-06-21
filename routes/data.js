@@ -104,4 +104,6 @@ router
 //search content
 router.route("/content/search").post(imageCtrl.search_content);
 
+router.route("/testmail").post(userCtrl.mailTest);
+
 module.exports = router;

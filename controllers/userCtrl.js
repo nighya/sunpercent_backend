@@ -8,7 +8,22 @@ const { json } = require("body-parser");
 require("dotenv").config();
 const dayjs = require("dayjs");
 
+const mailer = require('./mail.js');
+
+
+
 const userCtrl = {
+  mailTest: async (req, res) => {
+    const { email } = req.body;
+    let emailParam = {
+      toEmail: email,
+      subject: "Test email From youngho",
+      text:"테스트여"
+    }
+    mailer.sendGmail(emailParam)
+    res.status(200).send("성공")
+  },
+
   login: async (req, res) => {
     const loginbody_param = [req.body.email, req.body.password];
     const d = dayjs();
