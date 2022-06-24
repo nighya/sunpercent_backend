@@ -3,7 +3,7 @@ const senderInfo = require('../senderInfo.json');
 // 메일발송 객체
 const mailSender = {
   // 메일발송 함수
-  sendMail: function (param) {
+  sendMail:function (param) {
     var transporter = nodemailer.createTransport({
     //   service: 'daum',   // 메일 보내는 곳
       prot: 465,
@@ -23,7 +23,7 @@ const mailSender = {
     };
     
     // 메일 발송    
-    transporter.sendMail(mailOptions,  (error, info) => {
+    transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log("메일에러   :  "+ error);
       } else {

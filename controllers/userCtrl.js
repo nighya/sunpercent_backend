@@ -8,27 +8,50 @@ const { json } = require("body-parser");
 require("dotenv").config();
 const dayjs = require("dayjs");
 
-const mailer = require('./mail.js');
-
-
+const mailer = require("./mail.js");
 
 const userCtrl = {
   PasswordResetMailSend: async (req, res) => {
     const { email } = req.body;
+
+    //임시비번 만들기
+    const uid = uuid();
+    const arr_uid = uid.split("-");
+    const short_uid = arr_uid[4];
+    const resetPasswordSql =
+      "UPDATE sunpercent.members SET password=? WHERE email =?";
+
     let emailParam = {
       toEmail: email,
       subject: "Test email From youngho",
-      text:"테스트여"
-    }
-    mailer.sendMail(emailParam)
-    res.status(200).send("성공")
+      text: "테스트여 임시비번은 이거 :  " + short_uid,
+    };
+
+    bcrypt.genSalt(saltRounds, function (err, salt) {
+      bcrypt.hash(short_uid, salt, function (err, hash) {
+        const sqlParam = [hash, email];
+        connection.query(resetPasswordSql, sqlParam, (err, row) => {
+          if (row) {
+            mailer.sendMail(emailParam);
+            res.status(200).json({
+              message: "비번 초기화 성공",
+            });
+          } else {
+            console.log("row :" + row);
+            res.status(400).json({
+              message: "비번초기화 실패",
+            });
+          }
+        });
+      });
+    });
   },
 
   login: async (req, res) => {
     const loginbody_param = [req.body.email, req.body.password];
     const d = dayjs();
     const user_login_date = d.format("YYYY-MM-DD HH:mm:ss");
-    const user_login_ip = req.body.user_login_ip
+    const user_login_ip = req.body.user_login_ip;
     const login_history_param = [
       req.body.email,
       user_login_ip,
@@ -77,8 +100,9 @@ const userCtrl = {
               (err, row) => {
                 if (err) {
                   console.log("히스토리 에러");
-                  console.log("user_login_ip  :  " + JSON.stringify (user_login_ip));
-                  
+                  console.log(
+                    "user_login_ip  :  " + JSON.stringify(user_login_ip)
+                  );
                 }
               }
             );
