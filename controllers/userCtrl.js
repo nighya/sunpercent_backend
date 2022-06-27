@@ -11,6 +11,70 @@ const dayjs = require("dayjs");
 const mailer = require("./mail.js");
 
 const userCtrl = {
+  ChangePassword: (req, res) => {
+    const ChangePasswordBody_param = [req.body.new_password, 0, req.body.email];
+    const loginbody_param = [req.body.email, req.body.old_password];
+    const sql = "SELECT * FROM members WHERE email=?";
+    const ChangePasswordSql =
+      "UPDATE sunpercent.members SET password=?,needchpw=? WHERE email =?";
+    connection.query(sql, loginbody_param, (err_1, row_1) => {
+      if (err_1)
+        return res.status(400).json({
+          error: [
+            {
+              msg: "id not found!",
+            },
+          ],
+        });
+      if (row_1.length > 0) {
+        bcrypt.compare(
+          loginbody_param[1],
+          row_1[0].password,
+          (error, result) => {
+            if (result) {
+              //성공
+              bcrypt.genSalt(saltRounds, function (err_2, salt) {
+                bcrypt.hash(
+                  ChangePasswordBody_param[0],
+                  salt,
+                  function (err, hash) {
+                    ChangePasswordBody_param[0] = hash;
+                    if (err_2) {
+                      console.log("비번해쉬 에러");
+                    } else {
+                      connection.query(
+                        ChangePasswordSql,
+                        ChangePasswordBody_param,
+                        (err_3, row_3) => {
+                          if (err_3) {
+                            console.log("비번 변경 에러");
+                          } else {
+                            res.status(200).json({
+                              msg: "비번 변경 성공",
+                            });
+                          }
+                        }
+                      );
+                    }
+                  }
+                );
+              });
+            } else {
+              //실패
+              return res.status(400).json({
+                error: [
+                  {
+                    msg: "비번변경 로그인 실패!",
+                  },
+                ],
+              });
+            }
+          }
+        );
+      }
+    });
+  },
+
   PasswordResetMailSend: async (req, res) => {
     const { email } = req.body;
 
@@ -18,8 +82,9 @@ const userCtrl = {
     const uid = uuid();
     const arr_uid = uid.split("-");
     const short_uid = arr_uid[4];
+
     const resetPasswordSql =
-      "UPDATE sunpercent.members SET password=? WHERE email =?";
+      "UPDATE sunpercent.members SET password=?,needchpw=? WHERE email =?";
 
     let emailParam = {
       toEmail: email,
@@ -29,9 +94,10 @@ const userCtrl = {
 
     bcrypt.genSalt(saltRounds, function (err, salt) {
       bcrypt.hash(short_uid, salt, function (err, hash) {
-        const sqlParam = [hash, email];
+        const sqlParam = [hash,1,email];
         connection.query(resetPasswordSql, sqlParam, (err, row) => {
           if (row) {
+            console.log(emailParam.text)
             mailer.sendMail(emailParam);
             res.status(200).json({
               message: "비번 초기화 성공",
