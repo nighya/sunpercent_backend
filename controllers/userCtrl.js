@@ -11,6 +11,7 @@ const dayjs = require("dayjs");
 const mailer = require("./mail.js");
 
 const userCtrl = {
+
   ChangePassword: (req, res) => {
     const ChangePasswordBody_param = [req.body.new_password, 0, req.body.email];
     const loginbody_param = [req.body.email, req.body.old_password];
@@ -92,21 +93,15 @@ const userCtrl = {
       text: "테스트여 임시비번은 이거 :  " + short_uid,
     };
 
-    bcrypt.genSalt(saltRounds, function (err, salt) {
-      bcrypt.hash(short_uid, salt, function (err, hash) {
+    bcrypt.genSalt(saltRounds, function (err_1, salt) {
+      bcrypt.hash(short_uid, salt, function (err_2, hash) {
         const sqlParam = [hash,1,email];
-        connection.query(resetPasswordSql, sqlParam, (err, row) => {
-          if (row) {
-            console.log(emailParam.text)
+        connection.query(resetPasswordSql, sqlParam, (err_3, row_1) => {
+          if (row_1) {
             mailer.sendMail(emailParam);
-            res.status(200).json({
-              message: "비번 초기화 성공",
-            });
+            res.sendStatus(200);
           } else {
-            console.log("row :" + row);
-            res.status(400).json({
-              message: "비번초기화 실패",
-            });
+            console.log("비번리셋 메일 에러"+err_3)
           }
         });
       });

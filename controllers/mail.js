@@ -25,7 +25,7 @@ const mailSender = {
     // 메일 발송    
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log("메일에러   :  "+ error);
+        console.log("메일에러   :  " + error);
       } else {
         console.log('Email sent 성공  :  ' + info.response);
       }
