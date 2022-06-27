@@ -180,6 +180,7 @@ const userCtrl = {
               max_score: row[0].max_score,
               profile_image: row[0].profile_image,
               point: row[0].point,
+              needchpw:row[0].needchpw,
               // accessToken,
               // refreshToken,
             });
