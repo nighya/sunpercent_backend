@@ -111,4 +111,9 @@ router.route("/login/forgotpassword").post(userCtrl.PasswordResetMailSend);
 //changepassword
 router.route("/login/changepassword").post(userCtrl.ChangePassword);
 
+//report
+router
+  .route("/report")
+  .post(middleware.tokenCheck, imageCtrl.report_content);
+
 module.exports = router;

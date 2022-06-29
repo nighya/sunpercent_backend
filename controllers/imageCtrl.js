@@ -4,6 +4,7 @@ const connection = require("../dbconfig");
 const uuid = require("uuid-sequential");
 const fs = require("fs");
 const moment = require("moment");
+let jwt = require("jsonwebtoken");
 
 const imageCtrl = {
   imageupload: (req, res, next) => {
@@ -192,6 +193,56 @@ const imageCtrl = {
         console.log("search error something_2");
       }
     });
+  },
+  report_content: async (req, res) => {
+    const content_uid = req.body.content_uid;
+    const to_uid = req.body.to_uid;
+    const from_uid = req.body.from_uid;
+    const report_reason = req.body.report_reason;
+    const date = moment().format("YYYY-MM-DD hh:mm:ss A");
+    const datas = [content_uid, to_uid, from_uid, report_reason, date];
+
+
+    const report_confirm_sql =
+      "SELECT * FROM sunpercent.report WHERE content_uid  LIKE ? AND from_uid LIKE ?";
+    const report_sql =
+      "INSERT INTO sunpercent.report(content_uid, to_uid, from_uid,report_reason,date) values(?,?,?,?,?)";
+
+    const cookie = req.headers.cookie;
+    const token = cookie.replace("HrefreshToken=", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded) {
+      var base64Payload = token.split(".")[1];
+      var payload = Buffer.from(base64Payload, "base64");
+      var result = JSON.parse(payload.toString());
+      // console.log("from_uid :  "+from_uid+"   result :  "+Object.values(result)+ "  token   :"+token)
+      if (from_uid === result.user_uid) {
+        connection.query(report_confirm_sql, [content_uid, from_uid], (err, data) => {
+          if (data.length > 0) {
+            res.status(400).json({
+              message: "이미 신고 제출한 유저",
+            });
+          } else if (err) {
+            console.log("신고하기 에러   :   " + err);
+          } else {
+            connection.query(report_sql, datas, (err, rows) => {
+              if (err) {
+                // console.error("err : " + err);
+                res.sendStatus(400);
+              } else {
+                // console.log("rows: " + JSON.stringify(rows));
+                res.sendStatus(200);
+              }
+            });
+          }
+        });
+      } else {
+        res.status(403).json({
+          message: "fobbiden",
+        });
+      }
+    }
   },
 };
 
