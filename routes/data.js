@@ -1,6 +1,7 @@
 // const testCtrl = require("../controllers/testCtrl");
 const userCtrl = require("../controllers/userCtrl");
 const scoreCtrl = require("../controllers/scoreCtrl");
+const noteCtrl = require("../controllers/noteCtrl")
 const router = require("express").Router();
 const middleware = require("../middleware/tokenCheck");
 
@@ -87,6 +88,8 @@ router
   .route("/getscore/:content_uid")
   .post(middleware.tokenCheck, scoreCtrl.getscore);
  
+
+
 // profile_image update
 router
   .route("/Mypage/:user_uid")
@@ -101,6 +104,7 @@ router
   .route("/Mypage/mycontentimage/:user_uid")
   .get(middleware.tokenCheck, imageCtrl.getMycontentimage);
 
+ 
 //search content
 router.route("/content/search").post(imageCtrl.search_content);
 
@@ -116,4 +120,10 @@ router
   .route("/report")
   .post(middleware.tokenCheck, imageCtrl.report_content);
 
+  
+
+//send note
+router
+  .route("/userpage/sendnote/:user_uid")
+  .post(middleware.tokenCheck, noteCtrl.SendNote);
 module.exports = router;
