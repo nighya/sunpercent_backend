@@ -1,5 +1,6 @@
 const connection = require("../dbconfig");
 const moment = require("moment");
+let jwt = require("jsonwebtoken");
 
 const noteCtrl = {
   SendNote: async (req, res) => {
@@ -10,18 +11,52 @@ const noteCtrl = {
     const message = req.body.message;
     const from_gender = req.body.from_gender;
     const date = moment().format("YYYY-MM-DD hh:mm:ss A");
-    const datas = [to_uid, from_uid, nickname, title, message, from_gender, date];
+    const datas = [
+      to_uid,
+      from_uid,
+      nickname,
+      title,
+      message,
+      from_gender,
+      date,
+    ];
     const sql =
       "INSERT INTO note(to_uid, from_uid, nickname, title, message, from_gender,date) values(?,?,?,?,?,?,?)";
-    connection.query(sql, datas, (err_1, row_1) => {
-      if (err_1) {
-        console.log("note 에러  :   "+err_1)
+    const confirm_sql = "SELECT user_uid FROM members WHERE user_uid=?";
+
+    const cookie = req.headers.cookie;
+    const token = cookie.replace("HrefreshToken=", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded) {
+      var base64Payload = token.split(".")[1];
+      var payload = Buffer.from(base64Payload, "base64");
+      var result = JSON.parse(payload.toString());
+      if (from_uid === result.user_uid) {
+        connection.query(confirm_sql, [to_uid], (err, data) => {
+          if (data.length > 0) {
+            try {
+              connection.query(sql, datas, (err_1, row_1) => {
+                if (err_1) {
+                  console.log("note 에러  :   " + err_1);
+                } else {
+                  res.sendStatus(200);
+                }
+              });
+            } catch (err_c) {
+              console.log("note catch 에러  :   " + err_c);
+            }
+          } else {
+            res.sendStatus(400)
+          }
+        });
       } else {
-        res.sendStatus(200)
+        res.status(403).json({
+          message: "fobbiden",
+        });
+        // res.sendStatus(403)
       }
-    })
-
-
+    }
   },
 };
 
