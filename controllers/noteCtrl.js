@@ -6,7 +6,8 @@ const noteCtrl = {
   SendNote: async (req, res) => {
     const to_uid = req.body.to_uid;
     const from_uid = req.body.from_uid;
-    const nickname = req.body.nickname;
+    const to_nickname = req.body.to_nickname;
+    const from_nickname = req.body.from_nickname;
     const title = req.body.title;
     const message = req.body.message;
     const from_gender = req.body.from_gender;
@@ -14,14 +15,15 @@ const noteCtrl = {
     const datas = [
       to_uid,
       from_uid,
-      nickname,
+      to_nickname,
+      from_nickname,
       title,
       message,
       from_gender,
       date,
     ];
     const sql =
-      "INSERT INTO note(to_uid, from_uid, nickname, title, message, from_gender,date) values(?,?,?,?,?,?,?)";
+      "INSERT INTO note(to_uid, from_uid, to_nickname,from_nickname, title, message, from_gender,date) values(?,?,?,?,?,?,?,?)";
     const confirm_sql = "SELECT user_uid FROM members WHERE user_uid=?";
 
     const cookie = req.headers.cookie;
