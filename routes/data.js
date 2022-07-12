@@ -124,6 +124,13 @@ router
 
 //send note
 router
-  .route("/userpage/sendnote/:user_uid")
+  .route("/note/sendnote/:user_uid")
   .post(middleware.tokenCheck, noteCtrl.SendNote);
+
+
+//getsentnote
+
+router
+  .route("/note/getsentnote")
+  .post(middleware.tokenCheck, noteCtrl.getSentNote);
 module.exports = router;

@@ -49,7 +49,7 @@ const noteCtrl = {
               console.log("note catch 에러  :   " + err_c);
             }
           } else {
-            res.sendStatus(400)
+            res.sendStatus(400);
           }
         });
       } else {
@@ -60,6 +60,46 @@ const noteCtrl = {
       }
     }
   },
+  getSentNote: async (req, res) => {
+    const from_uid = req.body.from_uid;
+    const from_nickname = req.body.from_nickname;
+    // const current_user_uid = Object.keys(req.body)[0];
+
+    // const sql = "SELECT * FROM score WHERE content_uid=?";
+    const getsentnote_sql =
+      "SELECT * FROM note WHERE from_uid  LIKE ? AND from_nickname LIKE ?";
+    const cookie = req.headers.cookie;
+    const token = cookie.replace("HrefreshToken=", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded) {
+      var base64Payload = token.split(".")[1];
+      var payload = Buffer.from(base64Payload, "base64");
+      var result = JSON.parse(payload.toString());
+      if (from_uid === result.user_uid) {
+        connection.query(
+          getsentnote_sql,
+          [from_uid, from_nickname],
+          (err, data) => {
+            if (data.length > 0) {
+              try {
+                res.send(data);
+              } catch (err_c) {
+                console.log("getsentnote catch 에러  :   " + err_c);
+              }
+            } else {
+              res.sendStatus(400);
+            }
+          }
+        );
+      } else {
+        res.status(403).json({
+          message: "fobbiden",
+        });
+        // res.sendStatus(403)
+      }
+    }
+  },
+  getReceivedNote: async (req, res) => {},
 };
 
 module.exports = noteCtrl;
