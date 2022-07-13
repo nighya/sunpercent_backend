@@ -37,35 +37,24 @@ const noteCtrl = {
       var base64Payload = token.split(".")[1];
       var payload = Buffer.from(base64Payload, "base64");
       var result = JSON.parse(payload.toString());
-      console.log(to_uid);
+
       connection.query(to_uid_sql, to_nickname, (err_1, data_1) => {
         console.log("data_1  :  " + Object.values(data_1[0]));
         if (data_1.length > 0) {
-          to_uid = Object.values(data_1[0]);
-          console.log(datas.to_uid)
-          console.log(datas)
+          datas[0] = Object.values(data_1[0]);
+
           if (from_uid === result.user_uid) {
-            connection.query(
-              confirm_sql,
-              [to_uid, to_nickname],
-              (err, data_2) => {
-                if (data_2.length > 0) {
-                  try {
-                    connection.query(sql, datas, (err_2, row_2) => {
-                      if (err_2) {
-                        console.log("note 에러  :   " + err_2);
-                      } else {
-                        res.sendStatus(200);
-                      }
-                    });
-                  } catch (err_c) {
-                    console.log("note catch 에러  :   " + err_c);
-                  }
+            try {
+              connection.query(sql, datas, (err_2, row_2) => {
+                if (err_2) {
+                  console.log("note 에러  :   " + err_2);
                 } else {
-                  res.sendStatus(400);
+                  res.sendStatus(200);
                 }
-              }
-            );
+              });
+            } catch (err_c) {
+              console.log("note catch 에러  :   " + err_c);
+            }
           } else {
             res.status(403).json({
               message: "fobbiden",
