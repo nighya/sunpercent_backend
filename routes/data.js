@@ -129,8 +129,13 @@ router
 
 
 //getsentnote
-
 router
   .route("/note/getsentnote")
   .post(middleware.tokenCheck, noteCtrl.getSentNote);
+
+
+//getreceivednote
+router
+  .route("/note/getreceivednote")
+  .post(middleware.tokenCheck, noteCtrl.getReceivedNote);
 module.exports = router;
