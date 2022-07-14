@@ -121,14 +121,15 @@ const imageCtrl = {
     const image_path = req.body.image_path;
     const score_sql = "DELETE FROM sunpercent.score WHERE content_uid=?";
     const content_sql = "DELETE FROM sunpercent.images WHERE content_uid=?";
+
     try {
       fs.unlinkSync(`./public${image_path}`);
-      connection.query(content_sql, [req.params.content_uid], (error, rows) => {
+       connection.query(content_sql, [req.params.content_uid], (error, rows) => {
         if (error) {
           console.log("content 에러" + error);
           res.send(error);
         } else {
-          connection.query(score_sql, [req.params.content_uid], (err, row) => {
+        connection.query(score_sql, [req.params.content_uid], (err, row) => {
             if (err) {
               console.log("score 에러" + err);
               res.send(err);
