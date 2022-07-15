@@ -141,6 +141,19 @@ const noteCtrl = {
       }
     }
   },
+  deleteSentNoteDetail: async (req, res) => {
+    const id_num = req.body.id_num;
+    const from_uid = req.body.from_uid;
+    const delsentdetail_sql =
+      "UPDATE sunpercent.note SET from_delete=1 WHERE id_num LIKE ? AND from_uid LIKE ?";
+    connection.query(delsentdetail_sql, [id_num, from_uid], (err, row) => {
+      if (err) {
+        res.sendStatus(400);
+      } else {
+        res.sendStatus(200);
+      }
+    });
+  },
 };
 
 module.exports = noteCtrl;

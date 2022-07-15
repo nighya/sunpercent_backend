@@ -138,4 +138,10 @@ router
 router
   .route("/note/getreceivednote")
   .post(middleware.tokenCheck, noteCtrl.getReceivedNote);
+
+
+//delete note
+router
+  .route("/notedelete/deleteSentNoteDetail")
+  .post(middleware.tokenCheck, noteCtrl.deleteSentNoteDetail);  
 module.exports = router;
