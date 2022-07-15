@@ -1,6 +1,7 @@
 const connection = require("../dbconfig");
 const moment = require("moment");
 let jwt = require("jsonwebtoken");
+const mysql = require("mysql");
 
 const noteCtrl = {
   SendNote: async (req, res) => {
@@ -39,7 +40,7 @@ const noteCtrl = {
       var result = JSON.parse(payload.toString());
 
       connection.query(to_uid_sql, to_nickname, (err_1, data_1) => {
-        console.log("data_1  :  " + Object.values(data_1[0]));
+        // console.log("data_1  :  " + Object.values(data_1[0]));
         if (data_1.length > 0) {
           datas[0] = Object.values(data_1[0]);
 
@@ -153,6 +154,26 @@ const noteCtrl = {
         res.sendStatus(200);
       }
     });
+  },
+  deleteSentNoteSelected: async (req, res) => {
+    const body = req.body;
+    const test_query = [];
+    const delsentselected_sql =
+      "UPDATE sunpercent.note SET from_delete=1 WHERE id_num LIKE ? AND from_uid LIKE ?";
+    console.log("body  :   " + body);
+
+    body.map((item) => {
+      test_query.push(item);
+      console.log("test_query  :   " + test_query);
+    });
+    // connection.query(delsentselected_sql, test_query, (err, row) => {
+    //   if (err) {
+    //     res.sendStatus(400);
+    //   } else {
+    //     res.sendStatus(200);
+    //   }
+    // });
+    connection.query( test_query,defered.makeNodeResolver())
   },
   deleteReceivedNoteDetail: async (req, res) => {
     const id_num = req.body.id_num;

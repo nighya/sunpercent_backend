@@ -9,7 +9,8 @@ const connection = mysql.createConnection({
     user: conf.user,
     password: conf.password,
     port: conf.port,
-    database:conf.database,
+    database: conf.database,
+    multipleStatements: true,
 })
 
 connection.connect()

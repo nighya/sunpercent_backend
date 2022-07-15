@@ -130,7 +130,7 @@ router
   .route("/note/getreceivednote")
   .post(middleware.tokenCheck, noteCtrl.getReceivedNote);
 
-//delete note
+//delete note detail
 router
   .route("/notedelete/deleteSentNoteDetail")
   .post(middleware.tokenCheck, noteCtrl.deleteSentNoteDetail);
@@ -139,5 +139,11 @@ router
   .route("/notedelete/deleteReceivedNoteDetail")
   .post(middleware.tokenCheck, noteCtrl.deleteReceivedNoteDetail);
 
+
+//delete note selected
+router
+  .route("/notedelete/deleteSentNoteSelected")
+  .post(middleware.tokenCheck, noteCtrl.deleteSentNoteSelected);
+  
 
 module.exports = router;
