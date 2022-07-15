@@ -1,7 +1,7 @@
 // const testCtrl = require("../controllers/testCtrl");
 const userCtrl = require("../controllers/userCtrl");
 const scoreCtrl = require("../controllers/scoreCtrl");
-const noteCtrl = require("../controllers/noteCtrl")
+const noteCtrl = require("../controllers/noteCtrl");
 const router = require("express").Router();
 const middleware = require("../middleware/tokenCheck");
 
@@ -42,9 +42,10 @@ router.route("/register").post(userCtrl.register);
 router.route("/email_validate").post(userCtrl.email_validate);
 router.route("/nickname_validate").post(userCtrl.nickname_validate);
 
-
 //  /getUser
-router.route("/getUserPoint").post(middleware.tokenCheck, userCtrl.getUserPoint);
+router
+  .route("/getUserPoint")
+  .post(middleware.tokenCheck, userCtrl.getUserPoint);
 
 //image upload
 const storage = multer.diskStorage({
@@ -87,8 +88,6 @@ router
 router
   .route("/getscore/:content_uid")
   .post(middleware.tokenCheck, scoreCtrl.getscore);
- 
-
 
 // profile_image update
 router
@@ -104,10 +103,8 @@ router
   .route("/Mypage/mycontentimage/:user_uid")
   .get(middleware.tokenCheck, imageCtrl.getMycontentimage);
 
- 
 //search content
 router.route("/content/search").post(imageCtrl.search_content);
-
 
 //resetpassword
 router.route("/login/forgotpassword").post(userCtrl.PasswordResetMailSend);
@@ -116,32 +113,31 @@ router.route("/login/forgotpassword").post(userCtrl.PasswordResetMailSend);
 router.route("/login/changepassword").post(userCtrl.ChangePassword);
 
 //report
-router
-  .route("/report")
-  .post(middleware.tokenCheck, imageCtrl.report_content);
-
-  
+router.route("/report").post(middleware.tokenCheck, imageCtrl.report_content);
 
 //send note
 router
   .route("/note/sendnote/:user_uid")
   .post(middleware.tokenCheck, noteCtrl.SendNote);
 
-
 //getsentnote
 router
   .route("/note/getsentnote")
   .post(middleware.tokenCheck, noteCtrl.getSentNote);
-
 
 //getreceivednote
 router
   .route("/note/getreceivednote")
   .post(middleware.tokenCheck, noteCtrl.getReceivedNote);
 
-
 //delete note
 router
   .route("/notedelete/deleteSentNoteDetail")
-  .post(middleware.tokenCheck, noteCtrl.deleteSentNoteDetail);  
+  .post(middleware.tokenCheck, noteCtrl.deleteSentNoteDetail);
+
+router
+  .route("/notedelete/deleteReceivedNoteDetail")
+  .post(middleware.tokenCheck, noteCtrl.deleteReceivedNoteDetail);
+
+
 module.exports = router;

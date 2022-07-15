@@ -154,6 +154,19 @@ const noteCtrl = {
       }
     });
   },
+  deleteReceivedNoteDetail: async (req, res) => {
+    const id_num = req.body.id_num;
+    const to_uid = req.body.to_uid;
+    const delreceiveddetail_sql =
+      "UPDATE sunpercent.note SET to_delete=1 WHERE id_num LIKE ? AND to_uid LIKE ?";
+    connection.query(delreceiveddetail_sql, [id_num, to_uid], (err, row) => {
+      if (err) {
+        res.sendStatus(400);
+      } else {
+        res.sendStatus(200);
+      }
+    });
+  },
 };
 
 module.exports = noteCtrl;
