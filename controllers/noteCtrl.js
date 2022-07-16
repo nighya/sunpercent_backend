@@ -210,6 +210,49 @@ const noteCtrl = {
       }
     });
   },
+
+  deleteReceivedNoteSelected: async (req, res) => {
+    const body = req.body;
+    const confirm_sql =
+      "SELECT id_num FROM note WHERE id_num LIKE ? AND to_uid LIKE ?";
+    const delreceivedselected_sql =
+      "UPDATE sunpercent.note SET to_delete=1 WHERE id_num LIKE ? AND to_uid LIKE ?";
+
+    const cookie = req.headers.cookie;
+    const token = cookie.replace("HrefreshToken=", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded) {
+      var base64Payload = token.split(".")[1];
+      var payload = Buffer.from(base64Payload, "base64");
+      var result = JSON.parse(payload.toString());
+      const response = await body.map((item) => {
+        if (item.to_uid === result.user_uid) {
+          connection.query(
+            confirm_sql,
+            [item.id_num, item.to_uid],
+            (err_1, row_1) => {
+              if (row_1.length > 0) {
+                connection.query(
+                  delreceivedselected_sql,
+                  [item.id_num, item.to_uid],
+                  (err_2, row_2) => {
+                    if (err_2) {
+                      console.log("deleteReceivedNoteSelected error :  " + err_2);
+                    }
+                  }
+                );
+              }
+            }
+          );
+        }
+      });
+      res.sendStatus(200)
+    } else {
+      return res.status(403).json({
+        message: "fobbiden",
+      });
+    }
+  },
 };
 
 module.exports = noteCtrl;

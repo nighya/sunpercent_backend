@@ -145,5 +145,10 @@ router
   .route("/notedelete/deleteSentNoteSelected")
   .post(middleware.tokenCheck, noteCtrl.deleteSentNoteSelected);
   
+  router
+  .route("/notedelete/deleteReceivedNoteSelected")
+  .post(middleware.tokenCheck, noteCtrl.deleteReceivedNoteSelected);
+  
+
 
 module.exports = router;
