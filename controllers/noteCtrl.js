@@ -157,23 +157,45 @@ const noteCtrl = {
   },
   deleteSentNoteSelected: async (req, res) => {
     const body = req.body;
-    const test_query = [];
+    const confirm_sql =
+      "SELECT id_num FROM note WHERE id_num LIKE ? AND from_uid LIKE ?";
     const delsentselected_sql =
       "UPDATE sunpercent.note SET from_delete=1 WHERE id_num LIKE ? AND from_uid LIKE ?";
-    console.log("body  :   " + body);
 
-    body.map((item) => {
-      test_query.push(item);
-      console.log("test_query  :   " + test_query);
-    });
-    // connection.query(delsentselected_sql, test_query, (err, row) => {
-    //   if (err) {
-    //     res.sendStatus(400);
-    //   } else {
-    //     res.sendStatus(200);
-    //   }
-    // });
-    connection.query( test_query,defered.makeNodeResolver())
+    const cookie = req.headers.cookie;
+    const token = cookie.replace("HrefreshToken=", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded) {
+      var base64Payload = token.split(".")[1];
+      var payload = Buffer.from(base64Payload, "base64");
+      var result = JSON.parse(payload.toString());
+      const response = await body.map((item) => {
+        if (item.from_uid === result.user_uid) {
+          connection.query(
+            confirm_sql,
+            [item.id_num, item.from_uid],
+            (err_1, row_1) => {
+              if (row_1.length > 0) {
+                connection.query(
+                  delsentselected_sql,
+                  [item.id_num, item.from_uid],
+                  (err_2, row_2) => {
+                    if (err_2) {
+                      console.log("deleteSentNoteSelected error :  " + err_2);
+                    }
+                  }
+                );
+              }
+            }
+          );
+        }
+      });
+      res.sendStatus(200)
+    } else {
+      return res.status(403).json({
+        message: "fobbiden",
+      });
+    }
   },
   deleteReceivedNoteDetail: async (req, res) => {
     const id_num = req.body.id_num;
