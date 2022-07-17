@@ -117,7 +117,7 @@ router.route("/report").post(middleware.tokenCheck, imageCtrl.report_content);
 
 //send note
 router
-  .route("/note/sendnote/:user_uid")
+  .route("/note/sendnote")
   .post(middleware.tokenCheck, noteCtrl.SendNote);
 
 //getsentnote

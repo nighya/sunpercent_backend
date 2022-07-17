@@ -56,11 +56,11 @@ const imageCtrl = {
                       console.log(
                         "image upload point history 에러   " + error_4
                       );
-                    } else {
-                      console.log(
-                        "point 2점 사용 성공   : " + JSON.stringify(row_3)
-                      );
-                    }
+                    } //else {
+                    //   console.log(
+                    //     "point 2점 사용 성공   : " + JSON.stringify(row_3)
+                    //   );
+                    // }
                   }
                 );
               }
