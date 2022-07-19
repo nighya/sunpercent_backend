@@ -14,7 +14,7 @@ const imageCtrl = {
     // const content_uid = req.body.content_uid;
     const user_uid = req.body.user_uid;
     const image_path = `/images/${req.file.filename}`; // image 경로 만들기
-    const date = moment().format("YYYY-MM-DD hh:mm:ss A");
+    const date = moment().format("YYYY-MM-DD kk:mm:ss");
     const nickname = req.body.nickname;
     // const content_average_score = 0.0;
     // const score_count = 0;
@@ -39,7 +39,7 @@ const imageCtrl = {
         // console.log("row_1 :  " + JSON.stringify(row_1[0].point));
       } else {
         connection.query(sql, datas, (error_2, row_2) => {
-          console.log(datas);
+          // console.log(datas);
           if (error_2) {
             console.error("err : " + error_2);
             res.send(error_2);
