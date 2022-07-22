@@ -84,10 +84,10 @@ const userCtrl = {
           }
         });
       } else {
-        res.sendStatus(403)
+        res.sendStatus(403);
       }
     } else {
-      res.sendStatus(403)
+      res.sendStatus(403);
     }
   },
 
@@ -394,6 +394,30 @@ const userCtrl = {
           message: "권한없음fobbiden",
         });
       }
+    }
+  },
+  deleteProfileImage: async (req, res) => {
+    const profile_image = req.body.profile_image;
+    const deleteProfileImage_sql =
+      "UPDATE sunpercent.members SET profile_image=? WHERE user_uid =?";
+
+    try {
+      fs.unlinkSync(`./public${profile_image}`);
+      connection.query(
+        deleteProfileImage_sql,
+        [null, req.params.user_uid],
+        (error, rows) => {
+          if (error) {
+            console.log("content 에러" + error);
+            res.send(error);
+          } else {
+            // res.send(rows);
+            res.sendStatus(200);
+          }
+        }
+      );
+    } catch (err) {
+      console.log(err);
     }
   },
 };

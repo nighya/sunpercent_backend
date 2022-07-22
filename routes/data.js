@@ -86,6 +86,10 @@ router
     upload.single("image"),
     userCtrl.update_profile_image
   );
+// profile_image delete
+router
+  .route("/Mypage/deleteProfileImage/:user_uid")
+  .post(middleware.tokenCheck, userCtrl.deleteProfileImage);
 
 // getmycontent image
 router
@@ -99,7 +103,9 @@ router.route("/content/search").post(imageCtrl.search_content);
 router.route("/login/forgotpassword").post(userCtrl.PasswordResetMailSend);
 
 //changepassword
-router.route("/login/changepassword").post(middleware.tokenCheck,userCtrl.ChangePassword);
+router
+  .route("/login/changepassword")
+  .post(middleware.tokenCheck, userCtrl.ChangePassword);
 
 //report
 router.route("/report").post(middleware.tokenCheck, imageCtrl.report_content);
