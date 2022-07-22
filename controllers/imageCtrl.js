@@ -195,7 +195,7 @@ const imageCtrl = {
     const to_uid = req.body.to_uid;
     const from_uid = req.body.from_uid;
     const report_reason = req.body.report_reason;
-    const date = moment().format("YYYY-MM-DD hh:mm:ss A");
+    const date = moment().format("YYYY-MM-DD kk:mm:ss");
     const datas = [content_uid, to_uid, from_uid, report_reason, date];
 
     const report_confirm_sql =
