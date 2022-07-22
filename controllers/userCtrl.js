@@ -11,69 +11,84 @@ const dayjs = require("dayjs");
 const mailer = require("./mail.js");
 
 const userCtrl = {
-
   ChangePassword: (req, res) => {
     const ChangePasswordBody_param = [req.body.new_password, 0, req.body.email];
     const loginbody_param = [req.body.email, req.body.old_password];
     const sql = "SELECT * FROM members WHERE email=?";
     const ChangePasswordSql =
       "UPDATE sunpercent.members SET password=?,needchpw=? WHERE email =?";
-    connection.query(sql, loginbody_param, (err_1, row_1) => {
-      if (err_1)
-        return res.status(400).json({
-          error: [
-            {
-              msg: "id not found!",
-            },
-          ],
-        });
-      if (row_1.length > 0) {
-        bcrypt.compare(
-          loginbody_param[1],
-          row_1[0].password,
-          (error, result) => {
-            if (result) {
-              //성공
-              bcrypt.genSalt(saltRounds, function (err_2, salt) {
-                bcrypt.hash(
-                  ChangePasswordBody_param[0],
-                  salt,
-                  function (err, hash) {
-                    ChangePasswordBody_param[0] = hash;
-                    if (err_2) {
-                      console.log("비번해쉬 에러");
-                    } else {
-                      connection.query(
-                        ChangePasswordSql,
-                        ChangePasswordBody_param,
-                        (err_3, row_3) => {
-                          if (err_3) {
-                            console.log("비번 변경 에러");
-                          } else {
-                            res.status(200).json({
-                              msg: "비번 변경 성공",
-                            });
-                          }
+
+    const cookie = req.headers.cookie;
+    const token = cookie.replace("HrefreshToken=", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded) {
+      var base64Payload = token.split(".")[1];
+      var payload = Buffer.from(base64Payload, "base64");
+      var result = JSON.parse(payload.toString());
+      if (req.body.email === result.email) {
+        connection.query(sql, loginbody_param, (err_1, row_1) => {
+          if (err_1)
+            return res.status(400).json({
+              error: [
+                {
+                  msg: "id not found!",
+                },
+              ],
+            });
+          if (row_1.length > 0) {
+            bcrypt.compare(
+              loginbody_param[1],
+              row_1[0].password,
+              (error, result) => {
+                if (result) {
+                  //성공
+                  bcrypt.genSalt(saltRounds, function (err_2, salt) {
+                    bcrypt.hash(
+                      ChangePasswordBody_param[0],
+                      salt,
+                      function (err, hash) {
+                        ChangePasswordBody_param[0] = hash;
+                        if (err_2) {
+                          console.log("비번해쉬 에러");
+                        } else {
+                          connection.query(
+                            ChangePasswordSql,
+                            ChangePasswordBody_param,
+                            (err_3, row_3) => {
+                              if (err_3) {
+                                console.log("비번 변경 에러");
+                              } else {
+                                res.status(200).json({
+                                  msg: "비번 변경 성공",
+                                });
+                              }
+                            }
+                          );
                         }
-                      );
-                    }
-                  }
-                );
-              });
-            } else {
-              //실패
-              return res.status(400).json({
-                error: [
-                  {
-                    msg: "비번변경 로그인 실패!",
-                  },
-                ],
-              });
-            }
+                      }
+                    );
+                  });
+                } else {
+                  //실패
+                  return res.status(400).json({
+                    error: [
+                      {
+                        msg: "비번변경 로그인 실패!",
+                      },
+                    ],
+                  });
+                }
+              }
+            );
           }
-        );
+        });
+      } else {
+        res.sendStatus(403)
       }
-    });
+    } else {
+      res.sendStatus(403)
+    }
   },
 
   PasswordResetMailSend: async (req, res) => {
@@ -95,13 +110,13 @@ const userCtrl = {
 
     bcrypt.genSalt(saltRounds, function (err_1, salt) {
       bcrypt.hash(short_uid, salt, function (err_2, hash) {
-        const sqlParam = [hash,1,email];
+        const sqlParam = [hash, 1, email];
         connection.query(resetPasswordSql, sqlParam, (err_3, row_1) => {
           if (row_1) {
             mailer.sendMail(emailParam);
             res.sendStatus(200);
           } else {
-            console.log("비번리셋 메일 에러"+err_3)
+            console.log("비번리셋 메일 에러" + err_3);
           }
         });
       });
@@ -180,7 +195,7 @@ const userCtrl = {
               max_score: row[0].max_score,
               profile_image: row[0].profile_image,
               point: row[0].point,
-              needchpw:row[0].needchpw,
+              needchpw: row[0].needchpw,
               // accessToken,
               // refreshToken,
             });
