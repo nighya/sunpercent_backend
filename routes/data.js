@@ -9,31 +9,6 @@ const multer = require("multer");
 const path = require("path");
 const imageCtrl = require("../controllers/imageCtrl");
 
-// api/test/data
-// router.route("/data").get(middleware.isLoggedIn, testCtrl.getDatas).post(testCtrl.insertData);
-// router
-//   .route("/data")
-//   .get(middleware.tokenCheck, testCtrl.getDatas)
-//   .post(testCtrl.insertData);
-
-// router
-//   .route("/UserDataView/:contentId")
-//   .delete(testCtrl.deleteData)
-//   .post(testCtrl.updateData);
-// router.route("/UserDataView/:contentId/Edit").post(testCtrl.updateData);
-
-//api/test/user
-// router.route("/user").get(middleware.isLoggedIn, testCtrl.getUsers).post(testCtrl.insertUser);
-// router
-//   .route("/user")
-//   .get(middleware.tokenCheck, testCtrl.getUsers)
-//   .post(testCtrl.insertUser);
-// router
-//   .route("/UserUserView/:contentId")
-//   .delete(testCtrl.deleteUser)
-//   .post(testCtrl.updateUser);
-// router.route("/UserUserView/:contentId/Edit").post(testCtrl.updateUser);
-
 // /login
 router.route("/login").post(userCtrl.login);
 
@@ -58,7 +33,21 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype == "image/png" ||
+      file.mimetype == "image/jpg" ||
+      file.mimetype == "image/jpeg"
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
+    }
+  },
+});
 
 router
   .route("/imageupload")
@@ -116,9 +105,7 @@ router.route("/login/changepassword").post(userCtrl.ChangePassword);
 router.route("/report").post(middleware.tokenCheck, imageCtrl.report_content);
 
 //send note
-router
-  .route("/note/sendnote")
-  .post(middleware.tokenCheck, noteCtrl.SendNote);
+router.route("/note/sendnote").post(middleware.tokenCheck, noteCtrl.SendNote);
 
 //getsentnote
 router
@@ -139,16 +126,13 @@ router
   .route("/notedelete/deleteReceivedNoteDetail")
   .post(middleware.tokenCheck, noteCtrl.deleteReceivedNoteDetail);
 
-
 //delete note selected
 router
   .route("/notedelete/deleteSentNoteSelected")
   .post(middleware.tokenCheck, noteCtrl.deleteSentNoteSelected);
-  
-  router
+
+router
   .route("/notedelete/deleteReceivedNoteSelected")
   .post(middleware.tokenCheck, noteCtrl.deleteReceivedNoteSelected);
-  
-
 
 module.exports = router;
