@@ -17,9 +17,9 @@ module.exports = {
         next();
       }
     } catch (err) {
-      console.log("tokenCheck 에러  :  "+err);
+      // console.log("tokenCheck 에러  :  "+err);
       res.status(403).send({
-        message: "token Check forbidden Page",
+        message: "forbidden",
       });
     }
   },

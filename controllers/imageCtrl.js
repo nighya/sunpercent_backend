@@ -124,12 +124,12 @@ const imageCtrl = {
 
     try {
       fs.unlinkSync(`./public${image_path}`);
-       connection.query(content_sql, [req.params.content_uid], (error, rows) => {
+      connection.query(content_sql, [req.params.content_uid], (error, rows) => {
         if (error) {
           console.log("content 에러" + error);
           res.send(error);
         } else {
-        connection.query(score_sql, [req.params.content_uid], (err, row) => {
+          connection.query(score_sql, [req.params.content_uid], (err, row) => {
             if (err) {
               console.log("score 에러" + err);
               res.send(err);
@@ -145,26 +145,21 @@ const imageCtrl = {
   },
   update_content_score: async (req, res) => {
     const content_uid = req.body.content_uid;
-    const content_average_score = req.body.content_average_score;
     const score_count = req.body.score_count;
-    const sql =
-      "UPDATE images SET content_average_score=?,score_count=? WHERE content_uid =?";
-    if (content_average_score != "NaN") {
-      connection.query(
-        sql,
-        [content_average_score, score_count, content_uid],
-        (error, rows) => {
-          if (error) {
-            throw error;
-            // console.log(error)
-          }
-          res.status(200).json({
-            content_average_score: content_average_score,
-            score_count: score_count,
-          });
+    const sql = "UPDATE images SET score_count=? WHERE content_uid =?";
+    connection.query(
+      sql,
+      [ score_count, content_uid],
+      (error, rows) => {
+        if (error) {
+          throw error;
+          // console.log(error)
         }
-      );
-    }
+        res.status(200).json({
+          score_count: score_count,
+        });
+      }
+    );
   },
   search_content: async (req, res) => {
     const nicknamebody_param = req.body.nickname;
@@ -203,7 +198,6 @@ const imageCtrl = {
     const date = moment().format("YYYY-MM-DD hh:mm:ss A");
     const datas = [content_uid, to_uid, from_uid, report_reason, date];
 
-
     const report_confirm_sql =
       "SELECT * FROM sunpercent.report WHERE content_uid  LIKE ? AND from_uid LIKE ?";
     const report_sql =
@@ -219,25 +213,29 @@ const imageCtrl = {
       var result = JSON.parse(payload.toString());
       // console.log("from_uid :  "+from_uid+"   result :  "+Object.values(result)+ "  token   :"+token)
       if (from_uid === result.user_uid) {
-        connection.query(report_confirm_sql, [content_uid, from_uid], (err, data) => {
-          if (data.length > 0) {
-            res.status(400).json({
-              message: "이미 신고 제출한 유저",
-            });
-          } else if (err) {
-            console.log("신고하기 에러   :   " + err);
-          } else {
-            connection.query(report_sql, datas, (err, rows) => {
-              if (err) {
-                // console.error("err : " + err);
-                res.sendStatus(400);
-              } else {
-                // console.log("rows: " + JSON.stringify(rows));
-                res.sendStatus(200);
-              }
-            });
+        connection.query(
+          report_confirm_sql,
+          [content_uid, from_uid],
+          (err, data) => {
+            if (data.length > 0) {
+              res.status(400).json({
+                message: "이미 신고 제출한 유저",
+              });
+            } else if (err) {
+              console.log("신고하기 에러   :   " + err);
+            } else {
+              connection.query(report_sql, datas, (err, rows) => {
+                if (err) {
+                  // console.error("err : " + err);
+                  res.sendStatus(400);
+                } else {
+                  // console.log("rows: " + JSON.stringify(rows));
+                  res.sendStatus(200);
+                }
+              });
+            }
           }
-        });
+        );
       } else {
         res.status(403).json({
           message: "fobbiden",
