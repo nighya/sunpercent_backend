@@ -420,6 +420,31 @@ const userCtrl = {
       console.log(err);
     }
   },
+  userProfile: async (req, res) => {
+    const user_param = [req.body.nickname,req.body.user_uid ];
+    const sql = "SELECT  nickname,  gender,  profile_image FROM members WHERE  nickname  LIKE ? AND user_uid LIKE ?";
+    connection.query(sql, user_param, (err, row) => {
+      if (err) { console.log("userProfile 에러  :  " + err) }
+      if (row.length > 0) {
+        res.send(row)
+      } else {
+        res.sendStatus(400)
+      }
+  })
+  },
+  userProfile_image: async (req, res) => {
+    const user_param = [req.body.nickname,req.body.user_uid ];
+    const sql = "SELECT  content_uid,  user_uid,  image_path,date,nickname,gender,report_count FROM images WHERE  nickname  LIKE ? AND user_uid LIKE ?";
+    connection.query(sql, user_param, (err, row) => {
+      if (err) { console.log("userProfile 에러  :  " + err) }
+      if (row.length > 0) {
+        res.send(row)
+      } else {
+        res.sendStatus(400)
+      }
+  })
+    
+  },
 };
 
 module.exports = userCtrl;
