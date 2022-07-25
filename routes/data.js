@@ -92,12 +92,12 @@ router
   .post(middleware.tokenCheck, userCtrl.deleteProfileImage);
 
 // userpage_profile
-router.route("/userpageProfile/:nickname/:user_uid").post(userCtrl.userProfile);
+router.route("/userpageProfile/:nickname/:user_uid").post(userCtrl.get_userProfile);
 
 // userpage_profile_image
 router
   .route("/userpageProfileImage/:nickname/:user_uid")
-  .post(userCtrl.userProfile_image);
+  .post(userCtrl.get_userProfile_image);
 
 // getmycontent image
 router

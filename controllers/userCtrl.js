@@ -400,50 +400,71 @@ const userCtrl = {
     const profile_image = req.body.profile_image;
     const deleteProfileImage_sql =
       "UPDATE sunpercent.members SET profile_image=? WHERE user_uid =?";
-
-    try {
-      fs.unlinkSync(`./public${profile_image}`);
-      connection.query(
-        deleteProfileImage_sql,
-        [null, req.params.user_uid],
-        (error, rows) => {
-          if (error) {
-            console.log("content 에러" + error);
-            res.send(error);
-          } else {
-            // res.send(rows);
-            res.sendStatus(200);
+    const confirm_deleteProfileImage_sql =
+      "SELECT profile_image FROM sunpercent.members WHERE user_uid LIKE ?";
+    connection.query(
+      confirm_deleteProfileImage_sql,
+      req.params.user_uid,
+      (err_1, row_1) => {
+        if (err_1) {
+          res.send(err_1);
+        } else if (
+          Object.values(row_1[0]) == "" ||
+          Object.values(row_1[0]) == null
+        ) {
+          res.sendStatus(200);
+        } else {
+          try {
+            fs.unlinkSync(`./public${profile_image}`);
+            connection.query(
+              deleteProfileImage_sql,
+              [null, req.params.user_uid],
+              (err_2, rows) => {
+                if (err_2) {
+                  console.log("content 에러" + err_2);
+                  res.send(err_2);
+                } else {
+                  // res.send(rows);
+                  res.sendStatus(200);
+                }
+              }
+            );
+          } catch (err) {
+            console.log("deleteProfileImage 에러 :"+err);
           }
         }
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  },
-  userProfile: async (req, res) => {
-    const user_param = [req.body.nickname,req.body.user_uid ];
-    const sql = "SELECT  nickname,  gender,  profile_image FROM members WHERE  nickname  LIKE ? AND user_uid LIKE ?";
-    connection.query(sql, user_param, (err, row) => {
-      if (err) { console.log("userProfile 에러  :  " + err) }
-      if (row.length > 0) {
-        res.send(row)
-      } else {
-        res.sendStatus(400)
       }
-  })
+    );
   },
-  userProfile_image: async (req, res) => {
-    const user_param = [req.body.nickname,req.body.user_uid ];
-    const sql = "SELECT  content_uid,  user_uid,  image_path,date,nickname,gender,report_count FROM images WHERE  nickname  LIKE ? AND user_uid LIKE ?";
+  get_userProfile: async (req, res) => {
+    const user_param = [req.body.nickname, req.body.user_uid];
+    const sql =
+      "SELECT  nickname,  gender,  profile_image FROM members WHERE  nickname  LIKE ? AND user_uid LIKE ?";
     connection.query(sql, user_param, (err, row) => {
-      if (err) { console.log("userProfile 에러  :  " + err) }
-      if (row.length > 0) {
-        res.send(row)
-      } else {
-        res.sendStatus(400)
+      if (err) {
+        console.log("userProfile 에러  :  " + err);
       }
-  })
-    
+      if (row.length > 0) {
+        res.send(row);
+      } else {
+        res.sendStatus(400);
+      }
+    });
+  },
+  get_userProfile_image: async (req, res) => {
+    const user_param = [req.body.nickname, req.body.user_uid];
+    const sql =
+      "SELECT  content_uid,  user_uid,  image_path,date,nickname,gender,report_count FROM images WHERE  nickname  LIKE ? AND user_uid LIKE ?";
+    connection.query(sql, user_param, (err, row) => {
+      if (err) {
+        console.log("userProfile 에러  :  " + err);
+      }
+      if (row.length > 0) {
+        res.send(row);
+      } else {
+        res.sendStatus(400);
+      }
+    });
   },
 };
 
