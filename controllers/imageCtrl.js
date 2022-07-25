@@ -147,19 +147,15 @@ const imageCtrl = {
     const content_uid = req.body.content_uid;
     const score_count = req.body.score_count;
     const sql = "UPDATE images SET score_count=? WHERE content_uid =?";
-    connection.query(
-      sql,
-      [ score_count, content_uid],
-      (error, rows) => {
-        if (error) {
-          throw error;
-          // console.log(error)
-        }
-        res.status(200).json({
-          score_count: score_count,
-        });
+    connection.query(sql, [score_count, content_uid], (error, rows) => {
+      if (error) {
+        throw error;
+        // console.log(error)
       }
-    );
+      res.status(200).json({
+        score_count: score_count,
+      });
+    });
   },
   search_content: async (req, res) => {
     const nicknamebody_param = req.body.nickname;
@@ -198,6 +194,9 @@ const imageCtrl = {
     const date = moment().format("YYYY-MM-DD kk:mm:ss");
     const datas = [content_uid, to_uid, from_uid, report_reason, date];
 
+    const report_count_sql =
+      "UPDATE sunpercent.images SET report_count=report_count+1 WHERE content_uid=?";
+
     const report_confirm_sql =
       "SELECT * FROM sunpercent.report WHERE content_uid  LIKE ? AND from_uid LIKE ?";
     const report_sql =
@@ -224,13 +223,24 @@ const imageCtrl = {
             } else if (err) {
               console.log("신고하기 에러   :   " + err);
             } else {
-              connection.query(report_sql, datas, (err, rows) => {
-                if (err) {
+              connection.query(report_sql, datas, (err_1, row_1) => {
+                if (err_1) {
                   // console.error("err : " + err);
                   res.sendStatus(400);
                 } else {
+                  connection.query(
+                    report_count_sql,
+                    content_uid,
+                    (err_2, row_2) => {
+                      if (err_2) {
+                        // console.error("err : " + err);
+                        res.sendStatus(400);
+                      } else {
+                        res.sendStatus(200);
+                      }
+                    }
+                  );
                   // console.log("rows: " + JSON.stringify(rows));
-                  res.sendStatus(200);
                 }
               });
             }
