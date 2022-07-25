@@ -253,6 +253,19 @@ const noteCtrl = {
       });
     }
   },
+  confirm_received_NoteDetail: async (req, res) => {
+    const id_num = req.body.id_num;
+    const to_uid = req.body.to_uid;
+    const confirm_received_NoteDetail_sql =
+      "UPDATE sunpercent.note SET view_count=view_count+1 WHERE id_num LIKE ? AND to_uid LIKE ?";
+    connection.query(confirm_received_NoteDetail_sql, [id_num, to_uid], (err, row) => {
+      if (err) {
+        res.sendStatus(400);
+      } else {
+        res.sendStatus(200);
+      }
+    });
+  },
 };
 
 module.exports = noteCtrl;

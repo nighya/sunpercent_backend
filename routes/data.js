@@ -149,4 +149,9 @@ router
   .route("/notedelete/deleteReceivedNoteSelected")
   .post(middleware.tokenCheck, noteCtrl.deleteReceivedNoteSelected);
 
+//confirm received note
+router
+  .route("/confirm_received_NoteDetail")
+  .post(middleware.tokenCheck, noteCtrl.confirm_received_NoteDetail);
+
 module.exports = router;
