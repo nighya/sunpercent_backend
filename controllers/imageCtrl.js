@@ -83,7 +83,7 @@ const imageCtrl = {
       } else {
         connection.query(select_sql, [content_uid], (err, rows) => {
           if (err) {
-            console.log(err);
+            console.log("getimage :  "+err);
             res.send(err);
           } else {
             res.send(rows);
@@ -182,7 +182,7 @@ const imageCtrl = {
   search_content: async (req, res) => {
     const nicknamebody_param = req.body.nickname;
     // console.log("email :   " + emailbody_param);
-    const sql = `SELECT content_uid,image_path,date,nickname FROM sunpercent.images WHERE nickname LIKE "%"?"%"`;
+    const sql = `SELECT content_uid,image_path,date,nickname,report_count FROM sunpercent.images WHERE nickname LIKE "%"?"%"`;
     connection.query(sql, nicknamebody_param, (err, row) => {
       if (err) {
         return res.status(400).json({
