@@ -199,7 +199,7 @@ const imageCtrl = {
         // });
         res.send(row);
       } else if (row.length == 0) {
-        console.log("row : " + row);
+        // console.log("row : " + row);
         res.status(200).json({
           msg: "No Data",
         });
