@@ -119,28 +119,50 @@ const imageCtrl = {
 
   deleteImage: async (req, res) => {
     const image_path = req.body.image_path;
+    const user_uid = req.body.user_uid;
     const score_sql = "DELETE FROM sunpercent.score WHERE content_uid=?";
     const content_sql = "DELETE FROM sunpercent.images WHERE content_uid=?";
 
-    try {
-      fs.unlinkSync(`./public${image_path}`);
-      connection.query(content_sql, [req.params.content_uid], (error, rows) => {
-        if (error) {
-          console.log("content 에러" + error);
-          res.send(error);
-        } else {
-          connection.query(score_sql, [req.params.content_uid], (err, row) => {
-            if (err) {
-              console.log("score 에러" + err);
-              res.send(err);
+    const cookie = req.headers.cookie;
+    const token = cookie.replace("HrefreshToken=", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded) {
+      var base64Payload = token.split(".")[1];
+      var payload = Buffer.from(base64Payload, "base64");
+      var result = JSON.parse(payload.toString());
+      if (user_uid === result.user_uid) {
+        try {
+          fs.unlinkSync(`./public${image_path}`);
+          connection.query(
+            content_sql,
+            [req.params.content_uid],
+            (err_1, rows) => {
+              if (err_1) {
+                console.log("content 에러" + err_1);
+                res.send(err_1);
+              } else {
+                connection.query(
+                  score_sql,
+                  [req.params.content_uid],
+                  (err_2, row) => {
+                    if (err_2) {
+                      console.log("score 에러" + err_2);
+                      res.send(err_2);
+                    }
+                  }
+                );
+                // res.send(rows);
+                res.sendStatus(200);
+              }
             }
-          });
-          // res.send(rows);
-          res.sendStatus(200);
+          );
+        } catch (err_3) {
+          console.log("image delete 에러" + err_3);
+          console.log(err_3);
         }
-      });
-    } catch (err) {
-      console.log(err);
+      } else {
+        res.sendStatus(403);
+      }
     }
   },
   update_content_score: async (req, res) => {
