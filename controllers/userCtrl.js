@@ -447,7 +447,7 @@ const userCtrl = {
       if (row.length > 0) {
         res.send(row);
       } else {
-        res.sendStatus(400);
+        res.sendStatus(401);
       }
     });
   },
