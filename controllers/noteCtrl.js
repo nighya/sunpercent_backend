@@ -1,7 +1,6 @@
 const connection = require("../dbconfig");
 const moment = require("moment");
 let jwt = require("jsonwebtoken");
-const mysql = require("mysql");
 
 const noteCtrl = {
   SendNote: async (req, res) => {
