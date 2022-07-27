@@ -6,8 +6,10 @@ const mailSender = {
   sendMail:function (param) {
     var transporter = nodemailer.createTransport({
     //   service: 'daum',   // 메일 보내는 곳
-      prot: 465,
-      host: 'smtp.daum.net',  
+    // host: mx1.improvmx.com
+      //port: 587
+      port: 465,
+      host: 'smtp.gmail.com',  
       secure: true,  
       auth: {
         user: senderInfo.user,  // 보내는 메일의 주소
@@ -16,7 +18,7 @@ const mailSender = {
     });
     // 메일 옵션
     var mailOptions = {
-      from: senderInfo.user, // 보내는 메일의 주소
+      from: "help@sunpercent.com", // 보내는 메일의 주소
       to: param.toEmail, // 수신할 이메일
       subject: param.subject, // 메일 제목
       text: param.text // 메일 내용

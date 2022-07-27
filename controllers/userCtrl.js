@@ -104,8 +104,8 @@ const userCtrl = {
 
     let emailParam = {
       toEmail: email,
-      subject: "Test email From youngho",
-      text: "테스트여 임시비번은 이거 :  " + short_uid,
+      subject: "sunpercent.com 임시비밀번호",
+      text: "sunpercent.com 임시비밀번호 :  "+short_uid +"\n\n로그인 후 비밀번호를 변경하셔야 합니다.",
     };
 
     bcrypt.genSalt(saltRounds, function (err_1, salt) {
@@ -430,7 +430,7 @@ const userCtrl = {
               }
             );
           } catch (err) {
-            console.log("deleteProfileImage 에러 :"+err);
+            console.log("deleteProfileImage 에러 :" + err);
           }
         }
       }
