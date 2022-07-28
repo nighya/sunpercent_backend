@@ -67,6 +67,7 @@ const deleteUserCtrl = {
                       if (Object.values(row_1[0]) != "") {
                         try {
                           fs.unlinkSync(`public${Object.values(row_1[0])}`);
+                          console.log("프로필파일 삭제");
                         } catch (err_c1) {
                           console.log("프로필파일 삭제 에러: " + err_c1);
                         }
@@ -76,6 +77,8 @@ const deleteUserCtrl = {
                           (err_02, row_02) => {
                             if (err_02) {
                               console.log("err_02 에러 : " + err_02);
+                            } else {
+                              console.log("else 0");
                             }
                           }
                         );
@@ -93,10 +96,14 @@ const deleteUserCtrl = {
                         console.log("err_2 에러  : " + err_2);
                       } else if (row_2[0] != null) {
                         console.log("log_2  : " + row_2[0]);
-                        row_2.map((data) => {
-                          console.log("data:  " + Object.values(data));
-                          fs.unlinkSync(`public${Object.values(data)}`);
-                        });
+                        try {
+                          row_2.map((data) => {
+                            console.log("data:  " + Object.values(data));
+                            fs.unlinkSync(`public${Object.values(data)}`);
+                          });
+                        } catch (err_c2) {
+                          console.log("err_c2 에러  : " + err_c2);
+                        }
                       } else {
                         console.log("else 2");
                       }

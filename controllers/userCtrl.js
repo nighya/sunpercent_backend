@@ -101,25 +101,37 @@ const userCtrl = {
 
     const resetPasswordSql =
       "UPDATE sunpercent.members SET password=?,needchpw=? WHERE email =?";
+    const confirm_user_sql = "SELECT email FROM members WHERE email=?";
 
     let emailParam = {
       toEmail: email,
       subject: "sunpercent.com 임시비밀번호",
-      text: "sunpercent.com 임시비밀번호 :  "+short_uid +"\n\n로그인 후 비밀번호를 변경하셔야 합니다.",
+      text:
+        "sunpercent.com 임시비밀번호 :  " +
+        short_uid +
+        "\n\n로그인 후 비밀번호를 변경하셔야 합니다.",
     };
-
-    bcrypt.genSalt(saltRounds, function (err_1, salt) {
-      bcrypt.hash(short_uid, salt, function (err_2, hash) {
-        const sqlParam = [hash, 1, email];
-        connection.query(resetPasswordSql, sqlParam, (err_3, row_1) => {
-          if (row_1) {
-            mailer.sendMail(emailParam);
-            res.sendStatus(200);
-          } else {
-            console.log("비번리셋 메일 에러" + err_3);
-          }
+    connection.query(confirm_user_sql, email, (err_0, row_0) => {
+      if (err_0) {
+        console.log("confirm_user 에러" + err_0);
+      } else if (row_0 == "") {
+        res.sendStatus(400);
+        // console.log("confirm_user row is null:" + row_0);
+      } else {
+        bcrypt.genSalt(saltRounds, function (err_1, salt) {
+          bcrypt.hash(short_uid, salt, function (err_2, hash) {
+            const sqlParam = [hash, 1, email];
+            connection.query(resetPasswordSql, sqlParam, (err_3, row_1) => {
+              if (row_1) {
+                mailer.sendMail(emailParam);
+                res.sendStatus(200);
+              } else {
+                console.log("비번리셋 메일 에러" + err_3);
+              }
+            });
+          });
         });
-      });
+      }
     });
   },
 
