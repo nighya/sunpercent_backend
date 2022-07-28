@@ -4,10 +4,10 @@ const scoreCtrl = require("../controllers/scoreCtrl");
 const noteCtrl = require("../controllers/noteCtrl");
 const router = require("express").Router();
 const middleware = require("../middleware/tokenCheck");
-
 const multer = require("multer");
 const path = require("path");
 const imageCtrl = require("../controllers/imageCtrl");
+const deleteUserCtrl = require("../controllers/deleteUserCtrl");
 
 // /login
 router.route("/login").post(userCtrl.login);
@@ -154,4 +154,9 @@ router
   .route("/confirm_received_NoteDetail")
   .post(middleware.tokenCheck, noteCtrl.confirm_received_NoteDetail);
 
+
+//delete user
+router
+  .route("/delete_user_goodbye")
+  .post(middleware.tokenCheck, deleteUserCtrl.delete_user);
 module.exports = router;
