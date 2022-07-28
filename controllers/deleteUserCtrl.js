@@ -59,12 +59,17 @@ const deleteUserCtrl = {
                   await connection.query(
                     select_profile_image_path_sql,
                     [user_uid, email, nickname],
-                     (err_1, row_1) => {
+                    (err_1, row_1) => {
                       //   console.log("row_1 랭스 : " + JSON.stringify(row_1));
                       //   console.log("row_2 랭스 : " + Object.values(row_1[0]));
-                      console.log("log_1");
+                      console.log("log_1" + JSON.stringify(row_1[0]));
+                      console.log("log_2 :" + Object.values(row_1[0]) + ":");
                       if (Object.values(row_1[0]) != "") {
-                        fs.unlinkSync(`public${Object.values(row_1[0])}`);
+                        try {
+                          fs.unlinkSync(`public${Object.values(row_1[0])}`);
+                        } catch (err_c1) {
+                          console.log("프로필파일 삭제 에러: " + err_c1);
+                        }
                         connection.query(
                           deleteProfileImage_sql,
                           [null, user_uid],
@@ -80,74 +85,73 @@ const deleteUserCtrl = {
                     }
                   );
                   //image들 지우기
-                  await  connection.query(
+                  await connection.query(
                     select_image_path_sql,
                     [user_uid, nickname],
                     (err_2, row_2) => {
                       if (err_2) {
                         console.log("err_2 에러  : " + err_2);
-                      }
-                      else if (row_2[0] != null) {
+                      } else if (row_2[0] != null) {
                         console.log("log_2  : " + row_2[0]);
                         row_2.map((data) => {
                           console.log("data:  " + Object.values(data));
                           fs.unlinkSync(`public${Object.values(data)}`);
                         });
                       } else {
-                        console.log("else 2")
+                        console.log("else 2");
                       }
                     }
                   );
                   //content 지우기
-                  await  connection.query(
+                  await connection.query(
                     delete_content_sql,
                     [user_uid, nickname],
                     (err_3, row_3) => {
                       if (err_3) {
                         console.log("err_3 에러  : " + err_3);
                       } else {
-                        console.log("else 3")
+                        console.log("else 3");
                       }
                     }
                   );
                   //score 지우기
-                  await   connection.query(
+                  await connection.query(
                     delete_score_sql,
                     user_uid,
                     (err_4, row_4) => {
                       if (err_4) {
                         console.log("err_4 에러  : " + err_4);
                       } else {
-                        console.log("else 4")
+                        console.log("else 4");
                       }
                     }
                   );
                   //note 지우기
-                  await   connection.query(
+                  await connection.query(
                     delete_note_sql,
                     [user_uid, nickname],
                     (err_4_1, row_4_1) => {
                       if (err_4_1) {
                         console.log("err_4_1 에러  : " + err_4_1);
                       } else {
-                        console.log("else 5")
+                        console.log("else 5");
                       }
                     }
                   );
                   //user 지우기
-                  await  connection.query(
+                  await connection.query(
                     delete_user_sql,
                     [user_uid, email, nickname],
                     (err_5, row_5) => {
                       if (err_5) {
                         console.log("err_5 에러  : " + err_5);
                       } else {
-                        console.log("else 6")
+                        console.log("else 6");
                       }
                     }
                   );
                   //지우고 로그
-                  await  connection.query(
+                  await connection.query(
                     insert_deleted_user_sql,
                     [email, deleted_user_date],
                     (err_6, row_6) => {
