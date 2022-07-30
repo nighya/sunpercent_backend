@@ -60,16 +60,15 @@ const deleteUserCtrl = {
                     select_profile_image_path_sql,
                     [user_uid, email, nickname],
                     (err_1, row_1) => {
-                      //   console.log("row_1 랭스 : " + JSON.stringify(row_1));
-                      //   console.log("row_2 랭스 : " + Object.values(row_1[0]));
-                      console.log("log_1" + JSON.stringify(row_1[0]));
-                      console.log("log_2 :" + Object.values(row_1[0]) + ":");
+
+                      // console.log("log_1" + JSON.stringify(row_1[0]));
+                      // console.log("log_2 :" + Object.values(row_1[0]) + ":");
                       if (Object.values(row_1[0]) != "") {
                         try {
                           fs.unlinkSync(`public${Object.values(row_1[0])}`);
                           console.log("프로필파일 삭제");
                         } catch (err_c1) {
-                          console.log("프로필파일 삭제 에러: " + err_c1);
+                          // console.log("프로필파일 삭제 에러: " + err_c1);
                         }
                         connection.query(
                           deleteProfileImage_sql,
@@ -78,12 +77,12 @@ const deleteUserCtrl = {
                             if (err_02) {
                               console.log("err_02 에러 : " + err_02);
                             } else {
-                              console.log("else 0");
+                              // console.log("else 0");
                             }
                           }
                         );
                       } else {
-                        console.log("else 1");
+                        // console.log("else 1");
                       }
                     }
                   );
@@ -95,17 +94,17 @@ const deleteUserCtrl = {
                       if (err_2) {
                         console.log("err_2 에러  : " + err_2);
                       } else if (row_2[0] != null) {
-                        console.log("log_2  : " + row_2[0]);
+                        // console.log("log_2  : " + row_2[0]);
                         try {
                           row_2.map((data) => {
-                            console.log("data:  " + Object.values(data));
+                            // console.log("data:  " + Object.values(data));
                             fs.unlinkSync(`public${Object.values(data)}`);
                           });
                         } catch (err_c2) {
                           console.log("err_c2 에러  : " + err_c2);
                         }
                       } else {
-                        console.log("else 2");
+                        // console.log("else 2");
                       }
                     }
                   );
@@ -117,7 +116,7 @@ const deleteUserCtrl = {
                       if (err_3) {
                         console.log("err_3 에러  : " + err_3);
                       } else {
-                        console.log("else 3");
+                        // console.log("else 3");
                       }
                     }
                   );
@@ -129,7 +128,7 @@ const deleteUserCtrl = {
                       if (err_4) {
                         console.log("err_4 에러  : " + err_4);
                       } else {
-                        console.log("else 4");
+                        // console.log("else 4");
                       }
                     }
                   );
@@ -141,7 +140,7 @@ const deleteUserCtrl = {
                       if (err_4_1) {
                         console.log("err_4_1 에러  : " + err_4_1);
                       } else {
-                        console.log("else 5");
+                        // console.log("else 5");
                       }
                     }
                   );
@@ -153,7 +152,7 @@ const deleteUserCtrl = {
                       if (err_5) {
                         console.log("err_5 에러  : " + err_5);
                       } else {
-                        console.log("else 6");
+                        // console.log("else 6");
                       }
                     }
                   );
@@ -166,10 +165,10 @@ const deleteUserCtrl = {
                         console.log("err_5 에러  : " + err_6);
                         res.sendStatus(400);
                       } else {
-                        console.log(
-                          "user 지우고 지우기로그 성공  : " +
-                            JSON.stringify(row_6)
-                        );
+                        // console.log(
+                        //   "user 지우고 지우기로그 성공  : " +
+                        //     JSON.stringify(row_6)
+                        // );
                         res.sendStatus(200);
                       }
                     }
