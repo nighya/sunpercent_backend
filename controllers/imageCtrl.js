@@ -14,7 +14,7 @@ const imageCtrl = {
     // const content_uid = req.body.content_uid;
     const user_uid = req.body.user_uid;
     const image_path = `/images/${req.file.filename}`; // image 경로 만들기
-    const date = moment().format("YYYY-MM-DD kk:mm:ss");
+    const date = moment().format("YYYY-MM-DD HH:mm:ss");
     const nickname = req.body.nickname;
     // const content_average_score = 0.0;
     // const score_count = 0;
@@ -213,7 +213,7 @@ const imageCtrl = {
     const to_uid = req.body.to_uid;
     const from_uid = req.body.from_uid;
     const report_reason = req.body.report_reason;
-    const date = moment().format("YYYY-MM-DD kk:mm:ss");
+    const date = moment().format("YYYY-MM-DD HH:mm:ss");
     const datas = [content_uid, to_uid, from_uid, report_reason, date];
 
     const report_count_sql =

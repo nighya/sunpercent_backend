@@ -11,7 +11,7 @@ const noteCtrl = {
     const title = req.body.title;
     const message = req.body.message;
     const from_gender = req.body.from_gender;
-    const date = moment().format("YYYY-MM-DD kk:mm:ss");
+    const date = moment().format("YYYY-MM-DD HH:mm:ss");
     const datas = [
       to_uid,
       from_uid,
