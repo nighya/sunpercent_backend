@@ -107,8 +107,8 @@ const userCtrl = {
       toEmail: email,
       subject: "sunpercent.com 임시비밀번호",
       text:
-        "sunpercent.com 임시비밀번호 :  " +
-        short_uid +
+        "sunpercent.com 임시비밀번호는 " +
+        short_uid +" 입니다."+
         "\n\n로그인 후 비밀번호를 변경하셔야 합니다.",
     };
     connection.query(confirm_user_sql, email, (err_0, row_0) => {
