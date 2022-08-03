@@ -12,7 +12,7 @@ const imageCtrl = {
     // const content_uid = req.body.content_uid;
     const user_uid = req.body.user_uid;
     const image_path = `/images/${req.file.filename}`; // image 경로 만들기
-    console.log("req.file.filename   : " + req.file.filename);
+    // console.log("req.file.filename   : " + req.file.filename);
     const date = moment().format("YYYY-MM-DD HH:mm:ss");
     const nickname = req.body.nickname;
     // const content_average_score = 0.0;
@@ -83,7 +83,7 @@ const imageCtrl = {
     const image_arr = []; // image 경로 만들기
     const image_files = req.files;
     image_files.map((data) => {
-      console.log(data);
+      // console.log(data);
       image_arr.push(`/multi_images/${data.filename}`);
     });
     const image_path = image_arr.join();
