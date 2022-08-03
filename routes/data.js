@@ -1,3 +1,4 @@
+const uuid = require("uuid-sequential");
 // const testCtrl = require("../controllers/testCtrl");
 const userCtrl = require("../controllers/userCtrl");
 const scoreCtrl = require("../controllers/scoreCtrl");
@@ -28,8 +29,14 @@ const storage = multer.diskStorage({
     cb(null, "public/images/");
   },
   filename: function (req, file, cb) {
+    const uid = uuid();
+    const arr_uid = uid.split("-");
+    const filename_uid = arr_uid[4];
+    const filename = filename_uid.substring(6, filename_uid.length);
     const ext = path.extname(file.originalname);
-    cb(null, path.basename(file.originalname, ext) + "-" + Date.now() + ext);
+    cb(null, filename + "-" + Date.now() + ext);
+    // const ext = path.extname(file.originalname);
+    // cb(null, path.basename(file.originalname, ext) + "-" + Date.now() + ext);
   },
 });
 const storage_multi = multer.diskStorage({
@@ -37,13 +44,20 @@ const storage_multi = multer.diskStorage({
     cb(null, "public/multi_images/");
   },
   filename: function (req, file, cb) {
+    const uid = uuid();
+    const arr_uid = uid.split("-");
+    const filename_uid = arr_uid[4];
+    const filename = filename_uid.substring(6, filename_uid.length);
     const ext = path.extname(file.originalname);
-    cb(null, path.basename(file.originalname, ext) + "-" + Date.now() + ext);
+    cb(null, filename + "-" + Date.now() + ext);
+    // const ext = path.extname(file.originalname);
+    // cb(null, path.basename(file.originalname, ext) + "-" + Date.now() + ext);
   },
 });
 
 const upload = multer({
   storage: storage,
+  limits: { fileSize: 2 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (
       file.mimetype == "image/png" ||
@@ -59,6 +73,7 @@ const upload = multer({
 });
 const upload_multi = multer({
   storage: storage_multi,
+  limits: { fileSize: 2 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (
       file.mimetype == "image/png" ||
@@ -78,9 +93,13 @@ router
   .post(middleware.tokenCheck, upload.single("image"), imageCtrl.imageupload);
 router
   .route("/imageupload_multi")
-  .post(middleware.tokenCheck, upload_multi.array("image",3), imageCtrl.imageupload_multi);
+  .post(
+    middleware.tokenCheck,
+    upload_multi.array("image", 3),
+    imageCtrl.imageupload_multi
+  );
 
-  //image load
+//image load
 router.route("/getimage/:content_uid").get(imageCtrl.getimage);
 
 router.route("/getAllimages").get(imageCtrl.getAllimages);
@@ -119,7 +138,9 @@ router
   .post(middleware.tokenCheck, userCtrl.deleteProfileImage);
 
 // userpage_profile
-router.route("/userpageProfile/:nickname/:user_uid").post(userCtrl.get_userProfile);
+router
+  .route("/userpageProfile/:nickname/:user_uid")
+  .post(userCtrl.get_userProfile);
 
 // userpage_profile_image
 router
@@ -180,7 +201,6 @@ router
 router
   .route("/confirm_received_NoteDetail")
   .post(middleware.tokenCheck, noteCtrl.confirm_received_NoteDetail);
-
 
 //delete user
 router

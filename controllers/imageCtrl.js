@@ -1,5 +1,3 @@
-const multer = require("multer");
-const path = require("path");
 const connection = require("../dbconfig");
 const uuid = require("uuid-sequential");
 const fs = require("fs");
@@ -41,11 +39,13 @@ const imageCtrl = {
         connection.query(sql, datas, (error_2, row_2) => {
           // console.log(datas);
           if (error_2) {
+            fs.unlinkSync(`./public${image_path}`);
             console.error("err : " + error_2);
             res.send(error_2);
           } else {
             connection.query(point_sql, user_uid, (error_3, row_3) => {
               if (error_3) {
+                fs.unlinkSync(`./public${image_path}`);
                 console.log("point 2점 사용 에러   : " + error_3);
               } else {
                 connection.query(
@@ -53,6 +53,7 @@ const imageCtrl = {
                   history_datas,
                   (error_4, row_4) => {
                     if (error_4) {
+                      fs.unlinkSync(`./public${image_path}`);
                       console.log(
                         "image upload point history 에러   " + error_4
                       );
@@ -76,11 +77,11 @@ const imageCtrl = {
     const arr_uid = uid.split("-");
     const content_uid = arr_uid[4];
     const user_uid = req.body.user_uid;
-    const image_path = []; // image 경로 만들기
+    const image_arr = []; // image 경로 만들기
     req.files.map((data) => {
-      image_path.push(`/multi_images/${data.filename}`);
+      image_arr.push(`/multi_images/${data.filename}`);
     });
-    console.log(image_path);
+    const image_path = image_arr.join();
     const date = moment().format("YYYY-MM-DD HH:mm:ss");
     const nickname = req.body.nickname;
     const gender = req.body.gender;
@@ -88,7 +89,7 @@ const imageCtrl = {
     const history_datas = [user_uid, "-2", date];
 
     const sql =
-      "INSERT INTO images(content_uid, user_uid, image_path,date,nickname,gender) values(?,?,?,?,?,?)";
+      "INSERT INTO images_multi(content_uid, user_uid, image_path,date,nickname,gender) values(?,?,?,?,?,?)";
     const confirm_point_sql = "SELECT point FROM members WHERE user_uid=?";
     const point_sql =
       "UPDATE sunpercent.members SET point=point-2 WHERE user_uid=?";
@@ -97,21 +98,32 @@ const imageCtrl = {
 
     connection.query(confirm_point_sql, user_uid, (error_1, row_1) => {
       if (error_1) {
+        console.log("error_1 :  "+error_1);
         res.send(error_1);
       } else if (JSON.stringify(row_1[0].point) < 2) {
+        // console.log("row_1 :  " + JSON.stringify(row_1[0].point));
+        image_arr.map((data) => {
+          fs.unlinkSync(`./public${data}`);
+        });
         res.sendStatus(400);
-        console.log("row_1 :  " + JSON.stringify(row_1[0].point));
+        
       } else {
         connection.query(sql, datas, (error_2, row_2) => {
-          fs.unlinkSync(`./public${image_path}`);
           // console.log(datas);
           if (error_2) {
-            console.error("err : " + error_2);
+            console.error("err multi image : " + error_2);
+            image_arr.map((data) => {
+              fs.unlinkSync(`./public${data}`);
+            });
             res.send(error_2);
           } else {
             connection.query(point_sql, user_uid, (error_3, row_3) => {
               if (error_3) {
-                console.log("point 2점 사용 에러   : " + error_3);
+                console.log("point 2점 사용 multi image 에러   : " + error_3);
+                image_arr.map((data) => {
+                  fs.unlinkSync(`./public${data}`);
+                });
+                
               } else {
                 connection.query(
                   point_history_sql,
@@ -119,8 +131,11 @@ const imageCtrl = {
                   (error_4, row_4) => {
                     if (error_4) {
                       console.log(
-                        "image upload point history 에러   " + error_4
+                        "multi image point history 에러   " + error_4
                       );
+                      image_arr.map((data) => {
+                        fs.unlinkSync(`./public${data}`);
+                      });
                     } //else {
                     //   console.log(
                     //     "point 2점 사용 성공   : " + JSON.stringify(row_3)
@@ -171,7 +186,7 @@ const imageCtrl = {
   },
 
   getAllimages: (req, res, next) => {
-    const sql = "SELECT * FROM images";
+    // const sql = "SELECT * FROM images";
     const rand_sql = "SELECT * FROM images ORDER BY RAND() LIMIT 100;";
     connection.query(rand_sql, (err, row) => {
       if (err) {
