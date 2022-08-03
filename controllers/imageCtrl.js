@@ -107,9 +107,10 @@ const imageCtrl = {
 
   getAllimages: (req, res, next) => {
     const sql = "SELECT * FROM images";
-    connection.query(sql, (err, row) => {
+    const rand_sql = "SELECT * FROM images ORDER BY RAND() LIMIT 100;"
+    connection.query(rand_sql, (err, row) => {
       if (err) {
-        console.log(err);
+        console.log("getall_images 에러: "+err);
         res.send(err);
       } else {
         res.send(row);
