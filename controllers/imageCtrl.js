@@ -71,6 +71,71 @@ const imageCtrl = {
       }
     });
   },
+  imageupload_multi: (req, res, next) => {
+    const uid = uuid();
+    const arr_uid = uid.split("-");
+    const content_uid = arr_uid[4];
+    const user_uid = req.body.user_uid;
+    const image_path = []; // image 경로 만들기
+    req.files.map((data) => {
+      image_path.push(`/multi_images/${data.filename}`);
+    });
+    console.log(image_path);
+    const date = moment().format("YYYY-MM-DD HH:mm:ss");
+    const nickname = req.body.nickname;
+    const gender = req.body.gender;
+    const datas = [content_uid, user_uid, image_path, date, nickname, gender];
+    const history_datas = [user_uid, "-2", date];
+
+    const sql =
+      "INSERT INTO images(content_uid, user_uid, image_path,date,nickname,gender) values(?,?,?,?,?,?)";
+    const confirm_point_sql = "SELECT point FROM members WHERE user_uid=?";
+    const point_sql =
+      "UPDATE sunpercent.members SET point=point-2 WHERE user_uid=?";
+    const point_history_sql =
+      "INSERT INTO point_history(user_uid, point_value, date) values(?,?,?)";
+
+    connection.query(confirm_point_sql, user_uid, (error_1, row_1) => {
+      if (error_1) {
+        res.send(error_1);
+      } else if (JSON.stringify(row_1[0].point) < 2) {
+        res.sendStatus(400);
+        console.log("row_1 :  " + JSON.stringify(row_1[0].point));
+      } else {
+        connection.query(sql, datas, (error_2, row_2) => {
+          fs.unlinkSync(`./public${image_path}`);
+          // console.log(datas);
+          if (error_2) {
+            console.error("err : " + error_2);
+            res.send(error_2);
+          } else {
+            connection.query(point_sql, user_uid, (error_3, row_3) => {
+              if (error_3) {
+                console.log("point 2점 사용 에러   : " + error_3);
+              } else {
+                connection.query(
+                  point_history_sql,
+                  history_datas,
+                  (error_4, row_4) => {
+                    if (error_4) {
+                      console.log(
+                        "image upload point history 에러   " + error_4
+                      );
+                    } //else {
+                    //   console.log(
+                    //     "point 2점 사용 성공   : " + JSON.stringify(row_3)
+                    //   );
+                    // }
+                  }
+                );
+              }
+            });
+            res.sendStatus(200);
+          }
+        });
+      }
+    });
+  },
   getimage: (req, res, next) => {
     const content_uid = req.params.content_uid;
     const select_sql = "SELECT * FROM images WHERE content_uid=?";
@@ -83,7 +148,7 @@ const imageCtrl = {
       } else {
         connection.query(select_sql, [content_uid], (err, rows) => {
           if (err) {
-            console.log("getimage :  "+err);
+            console.log("getimage :  " + err);
             res.send(err);
           } else {
             res.send(rows);
@@ -107,10 +172,10 @@ const imageCtrl = {
 
   getAllimages: (req, res, next) => {
     const sql = "SELECT * FROM images";
-    const rand_sql = "SELECT * FROM images ORDER BY RAND() LIMIT 100;"
+    const rand_sql = "SELECT * FROM images ORDER BY RAND() LIMIT 100;";
     connection.query(rand_sql, (err, row) => {
       if (err) {
-        console.log("getall_images 에러: "+err);
+        console.log("getall_images 에러: " + err);
         res.send(err);
       } else {
         res.send(row);

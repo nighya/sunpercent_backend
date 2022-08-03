@@ -243,8 +243,9 @@ const userCtrl = {
       req.body.nickname,
       req.body.password,
       req.body.gender,
+      5
     ];
-    const sql = `INSERT INTO members(user_uid,email,nickname,password,gender) VALUES (?,?,?,?,?)`;
+    const sql = `INSERT INTO members(user_uid,email,nickname,password,gender,point) VALUES (?,?,?,?,?,?)`;
     bcrypt.genSalt(saltRounds, function (err, salt) {
       bcrypt.hash(body_param[3], salt, function (err, hash) {
         body_param[3] = hash;

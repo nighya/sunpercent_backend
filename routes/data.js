@@ -32,9 +32,33 @@ const storage = multer.diskStorage({
     cb(null, path.basename(file.originalname, ext) + "-" + Date.now() + ext);
   },
 });
+const storage_multi = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/multi_images/");
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    cb(null, path.basename(file.originalname, ext) + "-" + Date.now() + ext);
+  },
+});
 
 const upload = multer({
   storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype == "image/png" ||
+      file.mimetype == "image/jpg" ||
+      file.mimetype == "image/jpeg"
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
+    }
+  },
+});
+const upload_multi = multer({
+  storage: storage_multi,
   fileFilter: (req, file, cb) => {
     if (
       file.mimetype == "image/png" ||
@@ -52,8 +76,11 @@ const upload = multer({
 router
   .route("/imageupload")
   .post(middleware.tokenCheck, upload.single("image"), imageCtrl.imageupload);
+router
+  .route("/imageupload_multi")
+  .post(middleware.tokenCheck, upload_multi.array("image",3), imageCtrl.imageupload_multi);
 
-//image load
+  //image load
 router.route("/getimage/:content_uid").get(imageCtrl.getimage);
 
 router.route("/getAllimages").get(imageCtrl.getAllimages);
