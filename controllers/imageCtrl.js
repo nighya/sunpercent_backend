@@ -12,6 +12,7 @@ const imageCtrl = {
     // const content_uid = req.body.content_uid;
     const user_uid = req.body.user_uid;
     const image_path = `/images/${req.file.filename}`; // image 경로 만들기
+    console.log("req.file.filename   : " + req.file.filename);
     const date = moment().format("YYYY-MM-DD HH:mm:ss");
     const nickname = req.body.nickname;
     // const content_average_score = 0.0;
@@ -35,6 +36,8 @@ const imageCtrl = {
         fs.unlinkSync(`./public${image_path}`);
         res.sendStatus(400);
         // console.log("row_1 :  " + JSON.stringify(row_1[0].point));
+      } else if (!req.file.filename) {
+        res.sendStatus(405);
       } else {
         connection.query(sql, datas, (error_2, row_2) => {
           // console.log(datas);
@@ -78,7 +81,9 @@ const imageCtrl = {
     const content_uid = arr_uid[4];
     const user_uid = req.body.user_uid;
     const image_arr = []; // image 경로 만들기
-    req.files.map((data) => {
+    const image_files = req.files;
+    image_files.map((data) => {
+      console.log(data);
       image_arr.push(`/multi_images/${data.filename}`);
     });
     const image_path = image_arr.join();
@@ -98,7 +103,7 @@ const imageCtrl = {
 
     connection.query(confirm_point_sql, user_uid, (error_1, row_1) => {
       if (error_1) {
-        console.log("error_1 :  "+error_1);
+        console.log("error_1 :  " + error_1);
         res.send(error_1);
       } else if (JSON.stringify(row_1[0].point) < 2) {
         // console.log("row_1 :  " + JSON.stringify(row_1[0].point));
@@ -106,7 +111,8 @@ const imageCtrl = {
           fs.unlinkSync(`./public${data}`);
         });
         res.sendStatus(400);
-        
+      } else if (!image_path) {
+        res.sendStatus(405);
       } else {
         connection.query(sql, datas, (error_2, row_2) => {
           // console.log(datas);
@@ -123,7 +129,6 @@ const imageCtrl = {
                 image_arr.map((data) => {
                   fs.unlinkSync(`./public${data}`);
                 });
-                
               } else {
                 connection.query(
                   point_history_sql,
