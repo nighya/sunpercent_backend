@@ -29,7 +29,7 @@ const deleteUserCtrl = {
     const delete_note_sql =
       "DELETE FROM sunpercent.note WHERE to_uid LIKE ? AND to_nickname LIKE ?";
 
-    const insert_deleted_user_sql = `INSERT INTO deleted_user(email,date) VALUES (?,?)`;
+    const insert_deleted_user_sql = `INSERT INTO deleted_user(email,nickname,date) VALUES (?,?,?)`;
 
     const cookie = req.headers.cookie;
     const token = cookie.replace("HrefreshToken=", "");
@@ -60,7 +60,6 @@ const deleteUserCtrl = {
                     select_profile_image_path_sql,
                     [user_uid, email, nickname],
                     (err_1, row_1) => {
-
                       // console.log("log_1" + JSON.stringify(row_1[0]));
                       // console.log("log_2 :" + Object.values(row_1[0]) + ":");
                       if (Object.values(row_1[0]) != "") {
@@ -159,7 +158,7 @@ const deleteUserCtrl = {
                   //지우고 로그
                   await connection.query(
                     insert_deleted_user_sql,
-                    [email, deleted_user_date],
+                    [email, nickname, deleted_user_date],
                     (err_6, row_6) => {
                       if (err_6) {
                         console.log("err_5 에러  : " + err_6);
