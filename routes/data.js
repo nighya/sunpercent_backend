@@ -103,6 +103,7 @@ router
 router.route("/getimage/:content_uid").get(imageCtrl.getimage);
 
 router.route("/getAllimages").get(imageCtrl.getAllimages);
+router.route("/getAllimages_multi").get(imageCtrl.getAllimages_multi);
 
 //image delete
 router

@@ -202,6 +202,18 @@ const imageCtrl = {
       }
     });
   },
+  getAllimages_multi: (req, res, next) => {
+    // const sql = "SELECT * FROM images";
+    const rand_sql = "SELECT * FROM images_multi ORDER BY RAND() LIMIT 100;";
+    connection.query(rand_sql, (err, row) => {
+      if (err) {
+        console.log("getall_images_multi 에러: " + err);
+        res.send(err);
+      } else {
+        res.send(row);
+      }
+    });
+  },
 
   deleteImage: async (req, res) => {
     const image_path = req.body.image_path;
