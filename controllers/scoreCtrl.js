@@ -65,6 +65,21 @@ const scoreCtrl = {
       }
     });
   },
+  getscore_multi: async (req, res, next) => {
+    const content_uid = req.params.content_uid;
+    // const current_user_uid = Object.keys(req.body)[0];
+    const sql_multi = "SELECT * FROM score_multi WHERE content_uid=?";
+    // const other_user_sql =
+    //   "SELECT * FROM score_multi WHERE content_uid  LIKE ? AND from_uid LIKE ?";
+    connection.query(sql_multi, content_uid, (err_1, row_1) => {
+      if (err_1) {
+        console.log("getscore_multi err_1:  "+err_1)
+      } else {
+        res.send(row_1)
+      }
+
+    })
+  },
   scoreupload: (req, res, next) => {
     const content_uid = req.body.content_uid;
     const to_uid = req.body.to_uid;

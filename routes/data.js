@@ -128,6 +128,9 @@ router
 router
   .route("/getscore/:content_uid")
   .post(middleware.tokenCheck, scoreCtrl.getscore);
+  router
+  .route("/getscore_multi/:content_uid")
+  .post(middleware.tokenCheck, scoreCtrl.getscore_multi);
 
 // profile_image update
 router
