@@ -22,8 +22,24 @@ const scoreCtrl = {
         // console.log("score send current_user_uid :  " + current_user_uid);
 
         if (row_1[0].to_uid === current_user_uid) {
+          try {
+            const cookie = req.headers.cookie;
+            const token = cookie.replace("HrefreshToken=", "");
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+            if (decoded) {
+              var base64Payload = token.split(".")[1];
+              var payload = Buffer.from(base64Payload, "base64");
+              var result = JSON.parse(payload.toString());
+              if (current_user_uid === result.user_uid) {
+                res.send(row_1);
+              }
+            }
+          } catch (err) {
+            console.log("getscore catch err" + err);
+          }
+
           // console.log("점수보냄");
-          res.send(row_1);
         } else {
           connection.query(
             other_user_sql,
