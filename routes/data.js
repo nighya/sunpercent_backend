@@ -116,6 +116,9 @@ router
   .route("/contentscore")
   .post(middleware.tokenCheck, scoreCtrl.scoreupload);
 
+router
+  .route("/contentscore_multi")
+  .post(middleware.tokenCheck, scoreCtrl.scoreupload_multi);
 // image contentscore scorecount
 router
   .route("/contentscore/:content_uid")
