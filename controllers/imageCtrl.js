@@ -280,33 +280,38 @@ const imageCtrl = {
   search_content: async (req, res) => {
     const nicknamebody_param = req.body.nickname;
     // console.log("email :   " + emailbody_param);
-    const sql = `SELECT content_uid,image_path,date,nickname,report_count FROM sunpercent.images WHERE nickname LIKE "%"?"%"`;
-    connection.query(sql, nicknamebody_param, (err, row) => {
-      if (err) {
-        console.log("search err : " + err);
-        return res.status(400).json({
-          error: [
-            {
-              msg: "search error something_1",
-            },
-          ],
-        });
+    // const sql = `SELECT content_uid,image_path,date,nickname,report_count FROM sunpercent.images WHERE nickname LIKE "%"?"%"`;
+    const sql = `SELECT content_uid,image_path,date,nickname,report_count FROM sunpercent.images WHERE nickname LIKE "%"?"%" UNION SELECT content_uid,image_path,date,nickname,report_count FROM sunpercent.images_multi WHERE nickname LIKE "%"?"%"`;
+    connection.query(
+      sql,
+      [nicknamebody_param, nicknamebody_param],
+      (err, row) => {
+        if (err) {
+          console.log("search err : " + err);
+          return res.status(400).json({
+            error: [
+              {
+                msg: "search error something_1",
+              },
+            ],
+          });
+        }
+        if (row.length > 0) {
+          // res.status(200).json({
+          //   msg: "Email Address Exists",
+          // });
+          // console.log("row0 : " + row);
+          res.send(row);
+        } else if (row.length == 0) {
+          // console.log("row1 : " + row);
+          res.status(200).json({
+            msg: "No Data",
+          });
+        } else {
+          console.log("search error something_2");
+        }
       }
-      if (row.length > 0) {
-        // res.status(200).json({
-        //   msg: "Email Address Exists",
-        // });
-        // console.log("row0 : " + row);
-        res.send(row);
-      } else if (row.length == 0) {
-        // console.log("row1 : " + row);
-        res.status(200).json({
-          msg: "No Data",
-        });
-      } else {
-        console.log("search error something_2");
-      }
-    });
+    );
   },
   report_content: async (req, res) => {
     const content_uid = req.body.content_uid;
