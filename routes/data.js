@@ -101,6 +101,7 @@ router
 
 //image load
 router.route("/getimage/:content_uid").get(imageCtrl.getimage);
+router.route("/getimage_multi/:content_uid").get(imageCtrl.getimage_multi);
 
 router.route("/getAllimages").get(imageCtrl.getAllimages);
 router.route("/getAllimages_multi").get(imageCtrl.getAllimages_multi);

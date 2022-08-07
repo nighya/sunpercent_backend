@@ -177,6 +177,27 @@ const imageCtrl = {
       }
     });
   },
+  getimage_multi: (req, res, next) => {
+    const content_uid = req.params.content_uid;
+    const select_sql = "SELECT * FROM images_multi WHERE content_uid=?";
+    const update_count_sql =
+      "UPDATE sunpercent.images_multi SET view_count=view_count+1 WHERE content_uid=?";
+    connection.query(update_count_sql, [content_uid], (error, row) => {
+      if (error) {
+        console.log("multi update view count error :  " + error);
+        res.send(error);
+      } else {
+        connection.query(select_sql, [content_uid], (err, rows) => {
+          if (err) {
+            console.log("getimage_multi err :  " + err);
+            res.send(err);
+          } else {
+            res.send(rows);
+          }
+        });
+      }
+    });
+  },
   getMycontentimage: (req, res, next) => {
     const user_uid = req.params.user_uid;
     const sql = "SELECT * FROM images WHERE user_uid=?";
