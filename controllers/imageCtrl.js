@@ -283,6 +283,7 @@ const imageCtrl = {
     const sql = `SELECT content_uid,image_path,date,nickname,report_count FROM sunpercent.images WHERE nickname LIKE "%"?"%"`;
     connection.query(sql, nicknamebody_param, (err, row) => {
       if (err) {
+        console.log("search err : " + err);
         return res.status(400).json({
           error: [
             {
@@ -295,9 +296,10 @@ const imageCtrl = {
         // res.status(200).json({
         //   msg: "Email Address Exists",
         // });
+        // console.log("row0 : " + row);
         res.send(row);
       } else if (row.length == 0) {
-        // console.log("row : " + row);
+        // console.log("row1 : " + row);
         res.status(200).json({
           msg: "No Data",
         });

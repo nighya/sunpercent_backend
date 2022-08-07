@@ -154,7 +154,7 @@ router
   .get(middleware.tokenCheck, imageCtrl.getMycontentimage);
 
 //search content
-router.route("/content/search").post(imageCtrl.search_content);
+router.route("/content_search").post(imageCtrl.search_content);
 
 //resetpassword
 router.route("/login/forgotpassword").post(userCtrl.PasswordResetMailSend);
