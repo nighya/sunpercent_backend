@@ -401,6 +401,73 @@ const imageCtrl = {
       }
     }
   },
+  report_content_multi: async (req, res) => {
+    const content_uid = req.body.content_uid;
+    const to_uid = req.body.to_uid;
+    const from_uid = req.body.from_uid;
+    const report_reason = req.body.report_reason;
+    const date = moment().format("YYYY-MM-DD HH:mm:ss");
+    const datas = [content_uid, to_uid, from_uid, report_reason, date];
+
+    const report_count_sql =
+      "UPDATE sunpercent.images_multi SET report_count=report_count+1 WHERE content_uid=?";
+
+    const report_confirm_sql =
+      "SELECT * FROM sunpercent.report_multi WHERE content_uid  LIKE ? AND from_uid LIKE ?";
+    const report_sql =
+      "INSERT INTO sunpercent.report_multi(content_uid, to_uid, from_uid,report_reason,date) values(?,?,?,?,?)";
+
+    const cookie = req.headers.cookie;
+    const token = cookie.replace("HrefreshToken=", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded) {
+      var base64Payload = token.split(".")[1];
+      var payload = Buffer.from(base64Payload, "base64");
+      var result = JSON.parse(payload.toString());
+      // console.log("from_uid :  "+from_uid+"   result :  "+Object.values(result)+ "  token   :"+token)
+      if (from_uid === result.user_uid) {
+        connection.query(
+          report_confirm_sql,
+          [content_uid, from_uid],
+          (err, data) => {
+            if (data.length > 0) {
+              res.status(400).json({
+                message: "이미 신고 제출한 유저",
+              });
+            } else if (err) {
+              console.log("신고하기 에러   :   " + err);
+            } else {
+              connection.query(report_sql, datas, (err_1, row_1) => {
+                if (err_1) {
+                  // console.error("err : " + err);
+                  res.sendStatus(400);
+                } else {
+                  connection.query(
+                    report_count_sql,
+                    content_uid,
+                    (err_2, row_2) => {
+                      if (err_2) {
+                        // console.error("err : " + err);
+                        res.sendStatus(400);
+                      } else {
+                        res.sendStatus(200);
+                      }
+                    }
+                  );
+                  // console.log("rows: " + JSON.stringify(rows));
+                }
+              });
+            }
+          }
+        );
+      } else {
+        res.status(403).json({
+          message: "fobbiden",
+        });
+      }
+    }
+  },
 };
 
 module.exports = imageCtrl;

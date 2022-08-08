@@ -173,6 +173,7 @@ router
 
 //report
 router.route("/report").post(middleware.tokenCheck, imageCtrl.report_content);
+router.route("/report_multi").post(middleware.tokenCheck, imageCtrl.report_content_multi);
 
 //send note
 router.route("/note/sendnote").post(middleware.tokenCheck, noteCtrl.SendNote);
