@@ -308,7 +308,7 @@ const imageCtrl = {
       var result = JSON.parse(payload.toString());
       if (user_uid === result.user_uid) {
         try {
-          image_path_arr.map((data)=>{fs.unlinkSync(`./public${data}`);})
+        await  image_path_arr.map((data)=>{fs.unlinkSync(`./public${data}`);})
           connection.query(
             content_sql_multi,
             [req.params.content_uid],
