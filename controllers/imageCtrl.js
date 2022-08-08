@@ -88,13 +88,22 @@ const imageCtrl = {
     });
     const image_path = image_arr.join();
     const date = moment().format("YYYY-MM-DD HH:mm:ss");
+    const title = req.body.title;
     const nickname = req.body.nickname;
     const gender = req.body.gender;
-    const datas = [content_uid, user_uid, image_path, date, nickname, gender];
+    const datas = [
+      content_uid,
+      user_uid,
+      title,
+      image_path,
+      date,
+      nickname,
+      gender,
+    ];
     const history_datas = [user_uid, "-2", date];
 
     const sql =
-      "INSERT INTO images_multi(content_uid, user_uid, image_path,date,nickname,gender) values(?,?,?,?,?,?)";
+      "INSERT INTO images_multi(content_uid, user_uid, title, image_path, date, nickname, gender) values(?,?,?,?,?,?,?)";
     const confirm_point_sql = "SELECT point FROM members WHERE user_uid=?";
     const point_sql =
       "UPDATE sunpercent.members SET point=point-2 WHERE user_uid=?";
