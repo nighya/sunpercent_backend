@@ -111,6 +111,9 @@ router
   .route("/getimage/:content_uid")
   .post(middleware.tokenCheck, imageCtrl.deleteImage);
 
+router
+  .route("/getimage_multi/:content_uid")
+  .post(middleware.tokenCheck, imageCtrl.deleteImage_multi);
 //image contentscore
 router
   .route("/contentscore")
@@ -128,7 +131,7 @@ router
 router
   .route("/getscore/:content_uid")
   .post(middleware.tokenCheck, scoreCtrl.getscore);
-  router
+router
   .route("/getscore_multi/:content_uid")
   .post(middleware.tokenCheck, scoreCtrl.getscore_multi);
 
@@ -173,7 +176,9 @@ router
 
 //report
 router.route("/report").post(middleware.tokenCheck, imageCtrl.report_content);
-router.route("/report_multi").post(middleware.tokenCheck, imageCtrl.report_content_multi);
+router
+  .route("/report_multi")
+  .post(middleware.tokenCheck, imageCtrl.report_content_multi);
 
 //send note
 router.route("/note/sendnote").post(middleware.tokenCheck, noteCtrl.SendNote);

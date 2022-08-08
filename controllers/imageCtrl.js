@@ -293,6 +293,54 @@ const imageCtrl = {
       }
     }
   },
+  deleteImage_multi: async (req, res) => {
+    const image_path_arr = req.body.image_path;
+    const user_uid = req.body.user_uid;
+    const score_sql_multi = "DELETE FROM sunpercent.score_multi WHERE content_uid=?";
+    const content_sql_multi = "DELETE FROM sunpercent.images_multi WHERE content_uid=?";
+
+    const cookie = req.headers.cookie;
+    const token = cookie.replace("HrefreshToken=", "");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded) {
+      var base64Payload = token.split(".")[1];
+      var payload = Buffer.from(base64Payload, "base64");
+      var result = JSON.parse(payload.toString());
+      if (user_uid === result.user_uid) {
+        try {
+          image_path_arr.map((data)=>{fs.unlinkSync(`./public${data}`);})
+          connection.query(
+            content_sql_multi,
+            [req.params.content_uid],
+            (err_1, rows) => {
+              if (err_1) {
+                console.log("content 에러" + err_1);
+                res.send(err_1);
+              } else {
+                connection.query(
+                  score_sql_multi,
+                  [req.params.content_uid],
+                  (err_2, row) => {
+                    if (err_2) {
+                      console.log("score 에러" + err_2);
+                      res.send(err_2);
+                    }
+                  }
+                );
+                // res.send(rows);
+                res.sendStatus(200);
+              }
+            }
+          );
+        } catch (err_3) {
+          console.log("image delete 에러" + err_3);
+          console.log(err_3);
+        }
+      } else {
+        res.sendStatus(403);
+      }
+    }
+  },
   update_content_score: async (req, res) => {
     const content_uid = req.body.content_uid;
     const score_count = req.body.score_count;
