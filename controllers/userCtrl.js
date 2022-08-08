@@ -108,7 +108,8 @@ const userCtrl = {
       subject: "sunpercent.com 임시비밀번호",
       text:
         "sunpercent.com 임시비밀번호는 " +
-        short_uid +" 입니다."+
+        short_uid +
+        " 입니다." +
         "\n\n로그인 후 비밀번호를 변경하셔야 합니다.",
     };
     connection.query(confirm_user_sql, email, (err_0, row_0) => {
@@ -243,7 +244,7 @@ const userCtrl = {
       req.body.nickname,
       req.body.password,
       req.body.gender,
-      5
+      5,
     ];
     const sql = `INSERT INTO members(user_uid,email,nickname,password,gender,point) VALUES (?,?,?,?,?,?)`;
     bcrypt.genSalt(saltRounds, function (err, salt) {
@@ -465,9 +466,14 @@ const userCtrl = {
     });
   },
   get_userProfile_image: async (req, res) => {
-    const user_param = [req.body.nickname, req.body.user_uid];
+    const user_param = [
+      req.body.nickname,
+      req.body.user_uid,
+      req.body.nickname,
+      req.body.user_uid,
+    ];
     const sql =
-      "SELECT  content_uid,  user_uid,  image_path,date,nickname,gender,report_count FROM images WHERE  nickname  LIKE ? AND user_uid LIKE ?";
+      "SELECT  content_uid, user_uid, image_path, date, nickname, gender, report_count FROM images WHERE  nickname  LIKE ? AND user_uid LIKE ? UNION SELECT  content_uid, user_uid, image_path, date, nickname, gender, report_count FROM images_multi WHERE  nickname  LIKE ? AND user_uid LIKE ?";
     connection.query(sql, user_param, (err, row) => {
       if (err) {
         console.log("userProfile 에러  :  " + err);

@@ -110,10 +110,10 @@ router.route("/getAllimages_multi").get(imageCtrl.getAllimages_multi);
 router
   .route("/getimage/:content_uid")
   .post(middleware.tokenCheck, imageCtrl.deleteImage);
-
 router
   .route("/getimage_multi/:content_uid")
   .post(middleware.tokenCheck, imageCtrl.deleteImage_multi);
+
 //image contentscore
 router
   .route("/contentscore")
