@@ -246,15 +246,24 @@ const userCtrl = {
       req.body.gender,
       5,
     ];
+    const d = dayjs();
+    const register_user_date = d.format("YYYY-MM-DD HH:mm:ss");
     const sql = `INSERT INTO members(user_uid,email,nickname,password,gender,point) VALUES (?,?,?,?,?,?)`;
+    const register_user_sql = `INSERT INTO register_user(email,nickname,date) VALUES (?,?,?)`;
     bcrypt.genSalt(saltRounds, function (err, salt) {
       bcrypt.hash(body_param[3], salt, function (err, hash) {
         body_param[3] = hash;
         connection.query(sql, body_param, (err, row) => {
           if (row) {
-            res.status(200).json({
-              message: "회원가입 성공",
-            });
+            connection.query(
+              register_user_sql,
+              [req.body.email, req.body.nickname, register_user_date],
+              (err_1, row_1) => {
+                res.status(200).json({
+                  message: "회원가입 성공",
+                });
+              }
+            );
           } else {
             res.status(400).json({
               message: "회원가입 실패",
