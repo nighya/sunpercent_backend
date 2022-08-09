@@ -209,8 +209,8 @@ const imageCtrl = {
   },
   getMycontentimage: (req, res, next) => {
     const user_uid = req.params.user_uid;
-    const sql = "SELECT * FROM images WHERE user_uid=?";
-    connection.query(sql, [user_uid], (err, row) => {
+    const sql = "SELECT * FROM images WHERE user_uid=? UNION SELECT * FROM images_multi WHERE user_uid=?";
+    connection.query(sql, [user_uid,user_uid], (err, row) => {
       if (err) {
         console.log(err);
         res.send(err);
