@@ -21,11 +21,17 @@ const deleteUserCtrl = {
       "UPDATE sunpercent.members SET profile_image=? WHERE user_uid =?";
     const select_image_path_sql =
       "SELECT image_path FROM sunpercent.images WHERE user_uid LIKE ? AND nickname LIKE ?";
+    const select_image_path_sql_multi =
+      "SELECT image_path FROM sunpercent.images_multi WHERE user_uid LIKE ? AND nickname LIKE ?";
     const delete_user_sql =
       "DELETE FROM sunpercent.members WHERE user_uid  LIKE ? AND email LIKE ? AND nickname LIKE ?";
     const delete_score_sql = "DELETE FROM sunpercent.score WHERE to_uid=?";
+    const delete_score_sql_multi =
+      "DELETE FROM sunpercent.score_multi WHERE to_uid=?";
     const delete_content_sql =
       "DELETE FROM sunpercent.images WHERE user_uid LIKE ? AND nickname LIKE ?";
+    const delete_content_sql_multi =
+      "DELETE FROM sunpercent.images_multi WHERE user_uid LIKE ? AND nickname LIKE ?";
     const delete_note_sql =
       "DELETE FROM sunpercent.note WHERE to_uid LIKE ? AND to_nickname LIKE ?";
 
@@ -107,6 +113,33 @@ const deleteUserCtrl = {
                       }
                     }
                   );
+                  //image_multi들 지우기
+                  await connection.query(
+                    select_image_path_sql_multi,
+                    [user_uid, nickname],
+                    (err_2_1, row_2_1) => {
+                      if (err_2_1) {
+                        console.log("err_2 에러  : " + err_2_1);
+                      } else if (row_2_1[0] != null) {
+                        // console.log("log_2  : " + row_2[0]);
+                        try {
+                          let image_path_multi = [];
+                          row_2_1.map((data) => {
+                            // fs.unlinkSync(`public${Object.values(data)}`);
+                            data.image_path = data.image_path.split(",");
+                            image_path_multi = image_path_multi.concat(data.image_path);
+                          });
+                          image_path_multi.map((item) => {
+                            fs.unlinkSync(`public${item}`);
+                          });
+                        } catch (err_c2_1) {
+                          console.log("err_c2 에러  : " + err_c2_1);
+                        }
+                      } else {
+                        // console.log("else 2");
+                      }
+                    }
+                  );
                   //content 지우기
                   await connection.query(
                     delete_content_sql,
@@ -119,6 +152,18 @@ const deleteUserCtrl = {
                       }
                     }
                   );
+                  //content_multi 지우기
+                  await connection.query(
+                    delete_content_sql_multi,
+                    [user_uid, nickname],
+                    (err_3_1, row_3) => {
+                      if (err_3_1) {
+                        console.log("err_3 에러  : " + err_3_1);
+                      } else {
+                        // console.log("else 3");
+                      }
+                    }
+                  );
                   //score 지우기
                   await connection.query(
                     delete_score_sql,
@@ -126,6 +171,18 @@ const deleteUserCtrl = {
                     (err_4, row_4) => {
                       if (err_4) {
                         console.log("err_4 에러  : " + err_4);
+                      } else {
+                        // console.log("else 4");
+                      }
+                    }
+                  );
+                  //score_multi 지우기
+                  await connection.query(
+                    delete_score_sql_multi,
+                    user_uid,
+                    (err_4_1, row_4) => {
+                      if (err_4_1) {
+                        console.log("err_4 에러  : " + err_4_1);
                       } else {
                         // console.log("else 4");
                       }
