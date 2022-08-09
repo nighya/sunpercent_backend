@@ -209,8 +209,9 @@ const imageCtrl = {
   },
   getMycontentimage: (req, res, next) => {
     const user_uid = req.params.user_uid;
-    const sql = "SELECT * FROM images WHERE user_uid=? UNION SELECT * FROM images_multi WHERE user_uid=?";
-    connection.query(sql, [user_uid,user_uid], (err, row) => {
+    const sql =
+      "SELECT * FROM images WHERE user_uid=? UNION SELECT * FROM images_multi WHERE user_uid=?";
+    connection.query(sql, [user_uid, user_uid], (err, row) => {
       if (err) {
         console.log(err);
         res.send(err);
@@ -296,8 +297,10 @@ const imageCtrl = {
   deleteImage_multi: async (req, res) => {
     const image_path_arr = req.body.image_path;
     const user_uid = req.body.user_uid;
-    const score_sql_multi = "DELETE FROM sunpercent.score_multi WHERE content_uid=?";
-    const content_sql_multi = "DELETE FROM sunpercent.images_multi WHERE content_uid=?";
+    const score_sql_multi =
+      "DELETE FROM sunpercent.score_multi WHERE content_uid=?";
+    const content_sql_multi =
+      "DELETE FROM sunpercent.images_multi WHERE content_uid=?";
 
     const cookie = req.headers.cookie;
     const token = cookie.replace("HrefreshToken=", "");
@@ -308,7 +311,9 @@ const imageCtrl = {
       var result = JSON.parse(payload.toString());
       if (user_uid === result.user_uid) {
         try {
-        await  image_path_arr.map((data)=>{fs.unlinkSync(`./public${data}`);})
+          await image_path_arr.map((data) => {
+            fs.unlinkSync(`./public${data}`);
+          });
           connection.query(
             content_sql_multi,
             [req.params.content_uid],
@@ -354,6 +359,22 @@ const imageCtrl = {
         score_count: score_count,
       });
     });
+  },
+  update_content_score_multi: async (req, res) => {
+    try {
+      const content_uid = req.body.content_uid;
+      const sql =
+        "UPDATE images_multi SET score_count=score_count+1 WHERE content_uid =?";
+      connection.query(sql, content_uid, (error, rows) => {
+        if (error) {
+          console.log("update_content_score_multi if문 에러:  "+error)
+        } else {
+          res.sendStatus(200);
+        }
+      });
+    } catch (e) {
+      console.log("update_content_score_multi  error :  " + e);
+    }
   },
   search_content: async (req, res) => {
     const nicknamebody_param = req.body.nickname;

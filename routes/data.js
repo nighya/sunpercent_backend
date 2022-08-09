@@ -118,14 +118,17 @@ router
 router
   .route("/contentscore")
   .post(middleware.tokenCheck, scoreCtrl.scoreupload);
-
 router
   .route("/contentscore_multi")
   .post(middleware.tokenCheck, scoreCtrl.scoreupload_multi);
+
 // image contentscore scorecount
 router
   .route("/contentscore/:content_uid")
   .post(middleware.tokenCheck, imageCtrl.update_content_score);
+  router
+  .route("/contentscore_multi/:content_uid")
+  .post(middleware.tokenCheck, imageCtrl.update_content_score_multi);
 
 //get content score
 router
