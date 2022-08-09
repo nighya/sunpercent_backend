@@ -453,7 +453,7 @@ const userCtrl = {
   get_userProfile: async (req, res) => {
     const user_param = [req.body.nickname, req.body.user_uid];
     const sql =
-      "SELECT  nickname,  gender,  profile_image FROM members WHERE  nickname  LIKE ? AND user_uid LIKE ?";
+      "SELECT  user_uid, nickname,  gender,  profile_image FROM members WHERE  nickname  LIKE ? AND user_uid LIKE ?";
     connection.query(sql, user_param, (err, row) => {
       if (err) {
         console.log("userProfile 에러  :  " + err);
