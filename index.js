@@ -29,7 +29,7 @@ app.use(express.static("public"));
 
 const port = 4000;
 app.listen(port, () => {
-  process.send("ready")
+  process.send("ready");
   console.log("server listening on port", port, `http://192.168.0.12:${port}`);
 });
 
@@ -40,22 +40,19 @@ app.get("/", (req, res) => {
   res.send("hi")
 })
 
-let isDisableKeepAlive = false
-app.use(function(req, res, next) {
+let isDisableKeepAlive = false;
+app.use(function (req, res, next) {
   if (isDisableKeepAlive) {
-    res.set("Connection", "close")
+    res.set("Connection", "close");
   }
-  next()
-})
-
+  next();
+});
 
 process.on("SIGINT", function () {
-  isDisableKeepAlive = true
+  isDisableKeepAlive = true;
   app.close(function () {
-  console.log('server closed')
-  process.exit(0)
-  })
-})
+    console.log("server closed");
+    process.exit(0);
+  });
+});
 //입력하기
-
-
