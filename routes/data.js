@@ -10,21 +10,24 @@ const path = require("path");
 const imageCtrl = require("../controllers/imageCtrl");
 const deleteUserCtrl = require("../controllers/deleteUserCtrl");
 
+//bulid route start
 router.get('/', function(req, res, next) {
   res.sendFile(path.join(__dirname, '../public/' ,'index.html'));
 })
+//bulid route end
+
 
 // login
-router.route("/login").post(userCtrl.login);
+router.route("/sun/login").post(userCtrl.login);
 
 // /registerUser
-router.route("/register").post(userCtrl.register);
-router.route("/email_validate").post(userCtrl.email_validate);
-router.route("/nickname_validate").post(userCtrl.nickname_validate);
+router.route("/sun/register").post(userCtrl.register);
+router.route("/sun/email_validate").post(userCtrl.email_validate);
+router.route("/sun/nickname_validate").post(userCtrl.nickname_validate);
 
 //  /getUser
 router
-  .route("/getUserPoint")
+  .route("/sun/getUserPoint")
   .post(middleware.tokenCheck, userCtrl.getUserPoint);
 
 //image upload
@@ -93,10 +96,10 @@ const upload_multi = multer({
 });
 
 router
-  .route("/imageupload")
+  .route("/sun/imageupload")
   .post(middleware.tokenCheck, upload.single("image"), imageCtrl.imageupload);
 router
-  .route("/imageupload_multi")
+  .route("/sun/imageupload_multi")
   .post(
     middleware.tokenCheck,
     upload_multi.array("image", 3),
@@ -104,47 +107,47 @@ router
   );
 
 //image load
-router.route("/getimage/:content_uid").get(imageCtrl.getimage);
-router.route("/getimage_multi/:content_uid").get(imageCtrl.getimage_multi);
+router.route("/sun/getimage/:content_uid").get(imageCtrl.getimage);
+router.route("/sun/getimage_multi/:content_uid").get(imageCtrl.getimage_multi);
 
-router.route("/getAllimages").get(imageCtrl.getAllimages);
-router.route("/getAllimages_multi").get(imageCtrl.getAllimages_multi);
+router.route("/sun/getAllimages").get(imageCtrl.getAllimages);
+router.route("/sun/getAllimages_multi").get(imageCtrl.getAllimages_multi);
 
 //image delete
 router
-  .route("/getimage/:content_uid")
+  .route("/sun/getimage/:content_uid")
   .post(middleware.tokenCheck, imageCtrl.deleteImage);
 router
-  .route("/getimage_multi/:content_uid")
+  .route("/sun/getimage_multi/:content_uid")
   .post(middleware.tokenCheck, imageCtrl.deleteImage_multi);
 
 //image contentscore
 router
-  .route("/contentscore")
+  .route("/sun/contentscore")
   .post(middleware.tokenCheck, scoreCtrl.scoreupload);
 router
-  .route("/contentscore_multi")
+  .route("/sun/contentscore_multi")
   .post(middleware.tokenCheck, scoreCtrl.scoreupload_multi);
 
 // image contentscore scorecount
 router
-  .route("/contentscore/:content_uid")
+  .route("/sun/contentscore/:content_uid")
   .post(middleware.tokenCheck, imageCtrl.update_content_score);
   router
-  .route("/contentscore_multi/:content_uid")
+  .route("/sun/contentscore_multi/:content_uid")
   .post(middleware.tokenCheck, imageCtrl.update_content_score_multi);
 
 //get content score
 router
-  .route("/getscore/:content_uid")
+  .route("/sun/getscore/:content_uid")
   .post(middleware.tokenCheck, scoreCtrl.getscore);
 router
-  .route("/getscore_multi/:content_uid")
+  .route("/sun/getscore_multi/:content_uid")
   .post(middleware.tokenCheck, scoreCtrl.getscore_multi);
 
 // profile_image update
 router
-  .route("/Mypage/:user_uid")
+  .route("/sun/Mypage/:user_uid")
   .post(
     middleware.tokenCheck,
     upload.single("image"),
@@ -152,79 +155,79 @@ router
   );
 // profile_image delete
 router
-  .route("/Mypage/deleteProfileImage/:user_uid")
+  .route("/sun/Mypage/deleteProfileImage/:user_uid")
   .post(middleware.tokenCheck, userCtrl.deleteProfileImage);
 
 // userpage_profile
 router
-  .route("/userpageProfile/:nickname/:user_uid")
+  .route("/sun/userpageProfile/:nickname/:user_uid")
   .post(userCtrl.get_userProfile);
 
 // userpage_profile_image
 router
-  .route("/userpageProfileImage/:nickname/:user_uid")
+  .route("/sun/userpageProfileImage/:nickname/:user_uid")
   .post(userCtrl.get_userProfile_image);
 
 // getmycontent image
 router
-  .route("/Mypage/mycontentimage/:user_uid")
+  .route("/sun/Mypage/mycontentimage/:user_uid")
   .get(middleware.tokenCheck, imageCtrl.getMycontentimage);
 
 //search content
-router.route("/content_search").post(imageCtrl.search_content);
+router.route("/sun/content_search").post(imageCtrl.search_content);
 
 //resetpassword
-router.route("/login/forgotpassword").post(userCtrl.PasswordResetMailSend);
+router.route("/sun/login/forgotpassword").post(userCtrl.PasswordResetMailSend);
 
 //changepassword
 router
-  .route("/login/changepassword")
+  .route("/sun/login/changepassword")
   .post(middleware.tokenCheck, userCtrl.ChangePassword);
 
 //report
-router.route("/report").post(middleware.tokenCheck, imageCtrl.report_content);
+router.route("/sun/report").post(middleware.tokenCheck, imageCtrl.report_content);
 router
-  .route("/report_multi")
+  .route("/sun/report_multi")
   .post(middleware.tokenCheck, imageCtrl.report_content_multi);
 
 //send note
-router.route("/note/sendnote").post(middleware.tokenCheck, noteCtrl.SendNote);
+router.route("/sun/note/sendnote").post(middleware.tokenCheck, noteCtrl.SendNote);
 
 //getsentnote
 router
-  .route("/note/getsentnote")
+  .route("/sun/note/getsentnote")
   .post(middleware.tokenCheck, noteCtrl.getSentNote);
 
 //getreceivednote
 router
-  .route("/note/getreceivednote")
+  .route("/sun/note/getreceivednote")
   .post(middleware.tokenCheck, noteCtrl.getReceivedNote);
 
 //delete note detail
 router
-  .route("/notedelete/deleteSentNoteDetail")
+  .route("/sun/notedelete/deleteSentNoteDetail")
   .post(middleware.tokenCheck, noteCtrl.deleteSentNoteDetail);
 
 router
-  .route("/notedelete/deleteReceivedNoteDetail")
+  .route("/sun/notedelete/deleteReceivedNoteDetail")
   .post(middleware.tokenCheck, noteCtrl.deleteReceivedNoteDetail);
 
 //delete note selected
 router
-  .route("/notedelete/deleteSentNoteSelected")
+  .route("/sun/notedelete/deleteSentNoteSelected")
   .post(middleware.tokenCheck, noteCtrl.deleteSentNoteSelected);
 
 router
-  .route("/notedelete/deleteReceivedNoteSelected")
+  .route("/sun/notedelete/deleteReceivedNoteSelected")
   .post(middleware.tokenCheck, noteCtrl.deleteReceivedNoteSelected);
 
 //confirm received note
 router
-  .route("/confirm_received_NoteDetail")
+  .route("/sun/confirm_received_NoteDetail")
   .post(middleware.tokenCheck, noteCtrl.confirm_received_NoteDetail);
 
 //delete user
 router
-  .route("/delete_user_goodbye")
+  .route("/sun/delete_user_goodbye")
   .post(middleware.tokenCheck, deleteUserCtrl.delete_user);
 module.exports = router;
