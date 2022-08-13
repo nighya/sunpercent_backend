@@ -180,6 +180,7 @@ const imageCtrl = {
             console.log("getimage :  " + err);
             res.send(err);
           } else {
+            // res.sendStatus(404);
             res.send(rows);
           }
         });
@@ -367,7 +368,7 @@ const imageCtrl = {
         "UPDATE images_multi SET score_count=score_count+1 WHERE content_uid =?";
       connection.query(sql, content_uid, (error, rows) => {
         if (error) {
-          console.log("update_content_score_multi if문 에러:  "+error)
+          console.log("update_content_score_multi if문 에러:  " + error);
         } else {
           res.sendStatus(200);
         }
