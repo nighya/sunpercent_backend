@@ -11,11 +11,34 @@ const imageCtrl = require("../controllers/imageCtrl");
 const deleteUserCtrl = require("../controllers/deleteUserCtrl");
 
 //bulid route start
-router.get('/', function(req, res, next) {
-  res.sendFile(path.join(__dirname, '../public/' ,'index.html'));
-})
+router.get(
+  [
+    "/",
+    "/content",
+    "/Content_multi",
+    "/login",
+    "/findpassword",
+    "/changepassword",
+    "/register",
+    "/mypage/:user_uid",
+    "/contentupload",
+    "/contentupload_multi",
+    "/content/:content_uid",
+    "/content_multi/:content_uid",
+    "/search",
+    "/note/:nickname/:user_uid",
+    "/MyNote/:user_uid",
+    "/userpage/:nickname/:user_uid",
+    "/withdrawal",
+    "/TermsOfUse",
+    "/PolicyPrivacy",
+    "/404",
+  ],
+  function (req, res, next) {
+    res.sendFile(path.join(__dirname, "../public/", "index.html"));
+  }
+);
 //bulid route end
-
 
 // login
 router.route("/sun/login").post(userCtrl.login);
@@ -133,7 +156,7 @@ router
 router
   .route("/sun/contentscore/:content_uid")
   .post(middleware.tokenCheck, imageCtrl.update_content_score);
-  router
+router
   .route("/sun/contentscore_multi/:content_uid")
   .post(middleware.tokenCheck, imageCtrl.update_content_score_multi);
 
@@ -185,13 +208,17 @@ router
   .post(middleware.tokenCheck, userCtrl.ChangePassword);
 
 //report
-router.route("/sun/report").post(middleware.tokenCheck, imageCtrl.report_content);
+router
+  .route("/sun/report")
+  .post(middleware.tokenCheck, imageCtrl.report_content);
 router
   .route("/sun/report_multi")
   .post(middleware.tokenCheck, imageCtrl.report_content_multi);
 
 //send note
-router.route("/sun/note/sendnote").post(middleware.tokenCheck, noteCtrl.SendNote);
+router
+  .route("/sun/note/sendnote")
+  .post(middleware.tokenCheck, noteCtrl.SendNote);
 
 //getsentnote
 router

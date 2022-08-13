@@ -36,9 +36,9 @@ app.listen(port, () => {
 //가져오기
 app.use("/", require("./routes/data.js"));
 
-app.get("/", (req, res) => {
-  res.send("hi")
-})
+// app.get("/", (req, res) => {
+//   res.send("hi")
+// })
 
 let isDisableKeepAlive = false;
 app.use(function (req, res, next) {
