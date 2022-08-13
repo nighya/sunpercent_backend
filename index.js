@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
-const fs = require("fs");
+// const fs = require("fs");
 const cors = require("cors");
-const http = require("http");
+// const http = require("http");
 // const path = require("path");
 const bodyParser = require("body-parser");
 // const bcrypt = require("bcrypt-nodejs");

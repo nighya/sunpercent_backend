@@ -188,7 +188,7 @@ const userCtrl = {
               login_history_param,
               (err, row) => {
                 if (err) {
-                  console.log("히스토리 에러");
+                  console.log("히스토리 에러:"+err);
                   console.log(
                     "user_login_ip  :  " + JSON.stringify(user_login_ip)
                   );
