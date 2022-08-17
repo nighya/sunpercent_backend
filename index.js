@@ -38,7 +38,7 @@ app.use("/", require("./routes/data.js"));
 
 //404 page
 app.use(function(req, res, next) {
-  res.status(404).redirect('/404');
+  res.status(404).redirect('/NotFound');
 });
 
 // app.get("/", (req, res) => {
