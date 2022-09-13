@@ -9,6 +9,7 @@ const multer = require("multer");
 const path = require("path");
 const imageCtrl = require("../controllers/imageCtrl");
 const deleteUserCtrl = require("../controllers/deleteUserCtrl");
+const roomCtrl = require("../controllers/roomCtrl");
 
 //bulid route start
 router.get(
@@ -257,4 +258,12 @@ router
 router
   .route("/sun/delete_user_goodbye")
   .post(middleware.tokenCheck, deleteUserCtrl.delete_user);
+
+  //create room
+router.route("/sun/create_room").post(roomCtrl.create_Room);  
+//get room list
+router.route("/sun/get_room_list").get(roomCtrl.get_room_list); 
+//delete room
+router.route("/sun/delete_room").post(roomCtrl.delete_room); 
+
 module.exports = router;
