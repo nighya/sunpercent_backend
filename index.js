@@ -23,7 +23,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/", express.static(__dirname + "/public"));
-app.use(cors({ origin: "http://192.168.0.25:8888", credentials: true }));
+// app.use(cors({ origin: "http://192.168.0.25:8888", credentials: true }));
+app.use(cors({ origin: "https://socket.sunpercent.com", credentials: true }));
+
 
 app.use(express.static("public"));
 
