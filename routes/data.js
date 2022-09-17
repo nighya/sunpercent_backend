@@ -90,7 +90,7 @@ const storage_multi = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (
       file.mimetype == "image/png" ||
@@ -106,7 +106,7 @@ const upload = multer({
 });
 const upload_multi = multer({
   storage: storage_multi,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (
       file.mimetype == "image/png" ||
