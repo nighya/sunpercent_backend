@@ -375,7 +375,7 @@ const userCtrl = {
           }
         );
       } else {
-        // console.log("else req.body2 :  " + JSON.stringify(req.body));
+        console.log("else req.body2 :  " + JSON.stringify(req.body));
         res.status(403).json({
           message: "fobbiden",
         });
