@@ -31,6 +31,7 @@ const imageCtrl = {
 
     connection.query(confirm_point_sql, user_uid, (error_1, row_1) => {
       if (error_1) {
+        console.log("image upload error_1 : ",error_1)
         res.send(error_1);
       } else if (JSON.stringify(row_1[0].point) < 2) {
         fs.unlinkSync(`./public${image_path}`);
