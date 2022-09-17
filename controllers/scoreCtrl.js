@@ -23,8 +23,19 @@ const scoreCtrl = {
 
         if (row_1[0].to_uid === current_user_uid) {
           try {
+            // const cookie = req.headers.cookie;
+            // const token = cookie.replace("HrefreshToken=", "");
+            // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
             const cookie = req.headers.cookie;
-            const token = cookie.replace("HrefreshToken=", "");
+            var cookie_list = cookie.split(";");
+            var cookie_tmp = null;
+            cookie_list.map((data) => {
+              if (data.includes("HrefreshToken")) {
+                cookie_tmp = data.trim();
+              }
+            });
+            const token = cookie_tmp.replace("HrefreshToken=", "");
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
             if (decoded) {
@@ -73,12 +84,11 @@ const scoreCtrl = {
     //   "SELECT * FROM score_multi WHERE content_uid  LIKE ? AND from_uid LIKE ?";
     connection.query(sql_multi, content_uid, (err_1, row_1) => {
       if (err_1) {
-        console.log("getscore_multi err_1:  "+err_1)
+        console.log("getscore_multi err_1:  " + err_1);
       } else {
-        res.send(row_1)
+        res.send(row_1);
       }
-
-    })
+    });
   },
   scoreupload: (req, res, next) => {
     const content_uid = req.body.content_uid;
@@ -96,8 +106,19 @@ const scoreCtrl = {
       "UPDATE sunpercent.members SET point=point+1 WHERE user_uid=?";
     const point_history_sql =
       "INSERT INTO point_history(user_uid, point_value, date) values(?,?,?)";
+    // const cookie = req.headers.cookie;
+    // const token = cookie.replace("HrefreshToken=", "");
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const cookie = req.headers.cookie;
-    const token = cookie.replace("HrefreshToken=", "");
+    var cookie_list = cookie.split(";");
+    var cookie_tmp = null;
+    cookie_list.map((data) => {
+      if (data.includes("HrefreshToken")) {
+        cookie_tmp = data.trim();
+      }
+    });
+    const token = cookie_tmp.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     if (decoded) {
@@ -171,7 +192,14 @@ const scoreCtrl = {
     const content_score_multi = req.body.content_score_multi;
     const date = moment().format("YYYY-MM-DD HH:mm:ss");
     const gender = req.body.gender;
-    const datas = [content_uid, to_uid, from_uid, content_score_multi, date, gender];
+    const datas = [
+      content_uid,
+      to_uid,
+      from_uid,
+      content_score_multi,
+      date,
+      gender,
+    ];
     const confirm_sql =
       "SELECT * FROM score_multi WHERE content_uid  LIKE ? AND from_uid LIKE ?";
     const sql_multi =
@@ -180,8 +208,19 @@ const scoreCtrl = {
       "UPDATE sunpercent.members SET point=point+1 WHERE user_uid=?";
     const point_history_sql =
       "INSERT INTO point_history(user_uid, point_value, date) values(?,?,?)";
+    // const cookie = req.headers.cookie;
+    // const token = cookie.replace("HrefreshToken=", "");
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const cookie = req.headers.cookie;
-    const token = cookie.replace("HrefreshToken=", "");
+    var cookie_list = cookie.split(";");
+    var cookie_tmp = null;
+    cookie_list.map((data) => {
+      if (data.includes("HrefreshToken")) {
+        cookie_tmp = data.trim();
+      }
+    });
+    const token = cookie_tmp.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     if (decoded) {
@@ -207,7 +246,9 @@ const scoreCtrl = {
                 res.send(rows);
                 connection.query(point_sql, from_uid, (err_1, row_1) => {
                   if (err_1) {
-                    console.log("scoreupload_multi point 1점 추가 에러   : " + err_1);
+                    console.log(
+                      "scoreupload_multi point 1점 추가 에러   : " + err_1
+                    );
                   } else {
                     const point_history_arr = [from_uid, "1", date];
 
@@ -227,7 +268,9 @@ const scoreCtrl = {
                       point_history_arr,
                       (err_2, row_2) => {
                         if (err_2) {
-                          console.log("scoreupload_multi point_history 에러  :  " + err_2);
+                          console.log(
+                            "scoreupload_multi point_history 에러  :  " + err_2
+                          );
                         } else {
                           // console.log(
                           //   "point 1점 추가 성공   : " + JSON.stringify(row_1)

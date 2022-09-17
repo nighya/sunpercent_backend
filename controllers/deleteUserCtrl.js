@@ -37,16 +37,19 @@ const deleteUserCtrl = {
 
     const insert_deleted_user_sql = `INSERT INTO deleted_user(email,nickname,date) VALUES (?,?,?)`;
 
+    // const cookie = req.headers.cookie;
+    // const token = cookie.replace("HrefreshToken=", "");
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const cookie = req.headers.cookie;
-    var cookie_list = cookie.split(';')
-    // var cookie_tmp = null;
-    // cookie_list.map(data => {
-    //     if (data.includes("HrefreshToken")){
-    //         cookie_tmp = data
-    //     }
-    // })
-    // const token = cookie_tmp.replace("HrefreshToken=", "");
-    const token = cookie.replace("HrefreshToken=", "");
+    var cookie_list = cookie.split(";");
+    var cookie_tmp = null;
+    cookie_list.map((data) => {
+      if (data.includes("HrefreshToken")) {
+        cookie_tmp = data.trim();
+      }
+    });
+    const token = cookie_tmp.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     //login 확인
@@ -135,7 +138,9 @@ const deleteUserCtrl = {
                           row_2_1.map((data) => {
                             // fs.unlinkSync(`public${Object.values(data)}`);
                             data.image_path = data.image_path.split(",");
-                            image_path_multi = image_path_multi.concat(data.image_path);
+                            image_path_multi = image_path_multi.concat(
+                              data.image_path
+                            );
                           });
                           image_path_multi.map((item) => {
                             fs.unlinkSync(`public${item}`);

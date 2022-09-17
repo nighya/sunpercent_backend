@@ -15,7 +15,7 @@ module.exports = {
         var cookie_tmp = null;
         cookie_list.map((data) => {
           if (data.includes("HrefreshToken")) {
-            cookie_tmp = data;
+            cookie_tmp = data.trim();
           }
         });
         const token = cookie_tmp.replace("HrefreshToken=", "");

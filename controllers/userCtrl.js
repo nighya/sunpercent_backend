@@ -18,8 +18,19 @@ const userCtrl = {
     const ChangePasswordSql =
       "UPDATE sunpercent.members SET password=?,needchpw=? WHERE email =?";
 
+    // const cookie = req.headers.cookie;
+    // const token = cookie.replace("HrefreshToken=", "");
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const cookie = req.headers.cookie;
-    const token = cookie.replace("HrefreshToken=", "");
+    var cookie_list = cookie.split(";");
+    var cookie_tmp = null;
+    cookie_list.map((data) => {
+      if (data.includes("HrefreshToken")) {
+        cookie_tmp = data.trim();
+      }
+    });
+    const token = cookie_tmp.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     if (decoded) {
@@ -188,7 +199,7 @@ const userCtrl = {
               login_history_param,
               (err, row) => {
                 if (err) {
-                  console.log("히스토리 에러:"+err);
+                  console.log("히스토리 에러:" + err);
                   console.log(
                     "user_login_ip  :  " + JSON.stringify(user_login_ip)
                   );
@@ -198,7 +209,7 @@ const userCtrl = {
             res.cookie("HrefreshToken", refreshToken, {
               maxAge: 14 * 24 * 60 * 60 * 1000,
               httpOnly: true,
-              secure : true,
+              secure: true,
             });
             res.status(200).json({
               user_uid: row[0].user_uid,
@@ -352,9 +363,21 @@ const userCtrl = {
   //   }
   // },
   getUserPoint: async (req, res) => {
-    const cookie = req.headers.cookie;
     const user_uid = Object.keys(req.body)[0];
-    const token = cookie.replace("HrefreshToken=", "");
+
+    // const cookie = req.headers.cookie;
+    // const token = cookie.replace("HrefreshToken=", "");
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const cookie = req.headers.cookie;
+    var cookie_list = cookie.split(";");
+    var cookie_tmp = null;
+    cookie_list.map((data) => {
+      if (data.includes("HrefreshToken")) {
+        cookie_tmp = data.trim();
+      }
+    });
+    const token = cookie_tmp.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded) {
       var base64Payload = token.split(".")[1];
@@ -389,8 +412,19 @@ const userCtrl = {
       "UPDATE sunpercent.members SET profile_image=? WHERE user_uid =?";
     const sql_profile_image_path =
       "SELECT profile_image FROM sunpercent.members WHERE user_uid LIKE ?";
+    // const cookie = req.headers.cookie;
+    // const token = cookie.replace("HrefreshToken=", "");
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const cookie = req.headers.cookie;
-    const token = cookie.replace("HrefreshToken=", "");
+    var cookie_list = cookie.split(";");
+    var cookie_tmp = null;
+    cookie_list.map((data) => {
+      if (data.includes("HrefreshToken")) {
+        cookie_tmp = data.trim();
+      }
+    });
+    const token = cookie_tmp.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded) {
       var base64Payload = token.split(".")[1];

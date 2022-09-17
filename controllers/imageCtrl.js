@@ -31,7 +31,7 @@ const imageCtrl = {
 
     connection.query(confirm_point_sql, user_uid, (error_1, row_1) => {
       if (error_1) {
-        console.log("image upload error_1 : ",error_1)
+        console.log("image upload error_1 : ", error_1);
         res.send(error_1);
       } else if (JSON.stringify(row_1[0].point) < 2) {
         fs.unlinkSync(`./public${image_path}`);
@@ -254,9 +254,21 @@ const imageCtrl = {
     const score_sql = "DELETE FROM sunpercent.score WHERE content_uid=?";
     const content_sql = "DELETE FROM sunpercent.images WHERE content_uid=?";
 
+    // const cookie = req.headers.cookie;
+    // const token = cookie.replace("HrefreshToken=", "");
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const cookie = req.headers.cookie;
-    const token = cookie.replace("HrefreshToken=", "");
+    var cookie_list = cookie.split(";");
+    var cookie_tmp = null;
+    cookie_list.map((data) => {
+      if (data.includes("HrefreshToken")) {
+        cookie_tmp = data.trim();
+      }
+    });
+    const token = cookie_tmp.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     if (decoded) {
       var base64Payload = token.split(".")[1];
       var payload = Buffer.from(base64Payload, "base64");
@@ -304,9 +316,18 @@ const imageCtrl = {
     const content_sql_multi =
       "DELETE FROM sunpercent.images_multi WHERE content_uid=?";
 
+    // const cookie = req.headers.cookie;
+    // const token = cookie.replace("HrefreshToken=", "");
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const cookie = req.headers.cookie;
-    const token = cookie.replace("HrefreshToken=", "");
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    var cookie_list = cookie.split(";");
+    var cookie_tmp = null;
+    cookie_list.map((data) => {
+      if (data.includes("HrefreshToken")) {
+        cookie_tmp = data.trim();
+      }
+    });
+    const token = cookie_tmp.replace("HrefreshToken=", "");
     if (decoded) {
       var base64Payload = token.split(".")[1];
       var payload = Buffer.from(base64Payload, "base64");
@@ -430,8 +451,19 @@ const imageCtrl = {
     const report_sql =
       "INSERT INTO sunpercent.report(content_uid, to_uid, from_uid,report_reason,date) values(?,?,?,?,?)";
 
+    // const cookie = req.headers.cookie;
+    // const token = cookie.replace("HrefreshToken=", "");
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const cookie = req.headers.cookie;
-    const token = cookie.replace("HrefreshToken=", "");
+    var cookie_list = cookie.split(";");
+    var cookie_tmp = null;
+    cookie_list.map((data) => {
+      if (data.includes("HrefreshToken")) {
+        cookie_tmp = data.trim();
+      }
+    });
+    const token = cookie_tmp.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     if (decoded) {
@@ -497,8 +529,19 @@ const imageCtrl = {
     const report_sql =
       "INSERT INTO sunpercent.report_multi(content_uid, to_uid, from_uid,report_reason,date) values(?,?,?,?,?)";
 
+    // const cookie = req.headers.cookie;
+    // const token = cookie.replace("HrefreshToken=", "");
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const cookie = req.headers.cookie;
-    const token = cookie.replace("HrefreshToken=", "");
+    var cookie_list = cookie.split(";");
+    var cookie_tmp = null;
+    cookie_list.map((data) => {
+      if (data.includes("HrefreshToken")) {
+        cookie_tmp = data.trim();
+      }
+    });
+    const token = cookie_tmp.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     if (decoded) {
