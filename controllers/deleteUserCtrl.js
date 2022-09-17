@@ -38,6 +38,14 @@ const deleteUserCtrl = {
     const insert_deleted_user_sql = `INSERT INTO deleted_user(email,nickname,date) VALUES (?,?,?)`;
 
     const cookie = req.headers.cookie;
+    var cookie_list = cookie.split(';')
+    // var cookie_tmp = null;
+    // cookie_list.map(data => {
+    //     if (data.includes("HrefreshToken")){
+    //         cookie_tmp = data
+    //     }
+    // })
+    // const token = cookie_tmp.replace("HrefreshToken=", "");
     const token = cookie.replace("HrefreshToken=", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
